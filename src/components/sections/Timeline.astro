@@ -1,0 +1,48 @@
+---
+// src/components/sections/Timeline.astro
+import { timeline } from '../../data/timeline';
+---
+
+<section id="timeline" class="py-24 md:py-32 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+  <div class="max-w-7xl mx-auto px-6">
+    
+    <div class="max-w-3xl mb-24">
+      <h2 class="text-3xl md:text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 mb-4">
+        Professional Timeline
+      </h2>
+      <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+        A high-level view of my academic and professional journey.
+      </p>
+    </div>
+
+    <div class="relative max-w-4xl mx-auto">
+      <!-- Center Line -->
+      <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-slate-200 dark:bg-slate-800 transform md:-translate-x-1/2"></div>
+      
+      <div class="space-y-12">
+        {timeline.map((item, index) => (
+          <div class={`relative flex items-center md:justify-between ${index % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+            
+            <!-- Marker -->
+            <div class="absolute left-4 md:left-1/2 w-4 h-4 rounded-full bg-blue-500 ring-4 ring-white dark:ring-slate-900 transform -translate-x-1/2 mt-1 md:mt-0"></div>
+            
+            <div class="ml-12 md:ml-0 w-full md:w-[45%] flex flex-col">
+              <div class="bg-slate-50 dark:bg-slate-950 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:-translate-y-1 transition-transform duration-300">
+                <span class="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-2 block">
+                  {item.year}
+                </span>
+                <p class="text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            </div>
+            
+            <!-- Empty space for the other side on desktop -->
+            <div class="hidden md:block w-[45%]"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</section>

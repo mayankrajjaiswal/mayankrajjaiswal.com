@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
+import Hero from '../components/sections/Hero.astro';
+import About from '../components/sections/About.astro';
+import Experience from '../components/sections/Experience.astro';
+import Projects from '../components/sections/Projects.astro';
+import Research from '../components/sections/Research.astro';
+import Speaking from '../components/sections/Speaking.astro';
+import Certifications from '../components/sections/Certifications.astro';
+import Timeline from '../components/sections/Timeline.astro';
+import Contact from '../components/sections/Contact.astro';
+import Footer from '../components/layout/Footer.astro';
+---
+
+<Layout 
+  title="Mayank Raj Jaiswal | Enterprise Security Architect" 
+  description="Enterprise Security Architect specializing in Identity & Access Management, Cybersecurity, Artificial Intelligence, Cloud Security, and Enterprise Software Architecture."
+>
+  <Header />
+  <main class="flex-grow pt-16">
+    <Hero />
+    <About />
+    <Experience />
+    <Projects />
+    <Research />
+    <Speaking />
+    <Certifications />
+    <Timeline />
+    <Contact />
+  </main>
+  <Footer />
+</Layout>

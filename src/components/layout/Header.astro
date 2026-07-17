@@ -1,18 +1,18 @@
 ---
 // src/components/layout/Header.astro
 const links = [
-  { label: 'About', href: '#about' },
-  { label: 'Experience', href: '#experience' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Research', href: '#research' },
+  { label: 'About', href: '/#about' },
+  { label: 'Experience', href: '/#experience' },
+  { label: 'Projects', href: '/#projects' },
+  { label: 'Research', href: '/#research' },
   { label: 'Blog', href: '/blog' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Contact', href: '/#contact' },
 ];
 ---
 
 <header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300">
   <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-    <a href="#" class="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50 hover:opacity-80 transition-opacity">
+    <a href="/" class="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-50 hover:opacity-80 transition-opacity">
       Mayank Raj Jaiswal
     </a>
     
@@ -50,7 +50,7 @@ const links = [
         </svg>
       </button>
 
-      <a href="#contact" class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 rounded-lg shadow-sm hover:shadow transition-all">
+      <a href="/#contact" class="px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 rounded-lg shadow-sm hover:shadow transition-all">
         Connect
       </a>
     </nav>
@@ -106,7 +106,7 @@ const links = [
           {link.label}
         </a>
       ))}
-      <a href="#contact" data-drawer-link class="mt-2 w-full text-center px-4 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm">
+      <a href="/#contact" data-drawer-link class="mt-2 w-full text-center px-4 py-3 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm">
         Connect
       </a>
     </div>
@@ -159,21 +159,24 @@ const links = [
 
     const observerOptions = {
       root: null,
-      rootMargin: '-30% 0px -60% 0px', // Trigger focus when element covers mid-viewport
-      threshold: 0
+      rootMargin: '-20% 0px -60% 0px', // When the section occupies the central focal area
+      threshold: 0.1
     };
 
     const observerCallback = (entries) => {
       entries.forEach(entry => {
-        if (entries[0].intersectionRatio > 0 || entry.isIntersecting) {
+        if (entry.isIntersecting) {
           const id = entry.target.getAttribute('id');
           navLinks.forEach(link => {
             const href = link.getAttribute('href');
-            if (href === `#${id}`) {
-              link.classList.add('text-blue-600', 'dark:text-blue-500', 'bg-slate-100/80', 'dark:bg-slate-900/80');
+            // Safely extract the hash anchor (e.g. "/#about" -> "#about")
+            const hash = href.includes('#') ? href.substring(href.indexOf('#')) : '';
+            
+            if (hash === `#${id}`) {
+              link.classList.add('text-blue-600', 'dark:text-blue-500', 'bg-slate-100/80', 'dark:bg-slate-900/80', 'font-semibold');
               link.classList.remove('text-slate-600', 'dark:text-slate-400');
             } else {
-              link.classList.remove('text-blue-600', 'dark:text-blue-500', 'bg-slate-100/80', 'dark:bg-slate-900/80');
+              link.classList.remove('text-blue-600', 'dark:text-blue-500', 'bg-slate-100/80', 'dark:bg-slate-900/80', 'font-semibold');
               link.classList.add('text-slate-600', 'dark:text-slate-400');
             }
           });
@@ -183,6 +186,18 @@ const links = [
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
     sections.forEach(section => observer.observe(section));
+    
+    // Also handle direct clicks to highlight instantly without waiting for scroll debounce
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.forEach(l => {
+          l.classList.remove('text-blue-600', 'dark:text-blue-500', 'bg-slate-100/80', 'dark:bg-slate-900/80', 'font-semibold');
+          l.classList.add('text-slate-600', 'dark:text-slate-400');
+        });
+        link.classList.add('text-blue-600', 'dark:text-blue-500', 'bg-slate-100/80', 'dark:bg-slate-900/80', 'font-semibold');
+        link.classList.remove('text-slate-600', 'dark:text-slate-400');
+      });
+    });
   };
 
   // Run on page load

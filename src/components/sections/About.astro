@@ -10,75 +10,78 @@ const philosophy = [
   "Continuous learning is a professional responsibility."
 ];
 
-const currentFocus = [
-  "Artificial Intelligence for Cybersecurity",
-  "Identity & Access Management",
-  "Zero Trust",
-  "Cloud Security",
-  "Enterprise Architecture",
-  "Secure Software Engineering",
-  "AboutIAM",
-  "Research",
-  "Technical Writing",
-  "Speaking"
+const pillars = [
+  {
+    title: "Enterprise IAM",
+    desc: "Designing highly resilient, secure architectures for millions of active identities and transactions at scale.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`
+  },
+  {
+    title: "AI & Cyber Security",
+    desc: "Researching the next generation of adaptive, real-time threat intelligence systems driven by Machine Learning.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><circle cx="12" cy="12" r="10"></circle><path d="m12 16 4-4-4-4"></path><path d="M8 12h8"></path></svg>`
+  },
+  {
+    title: "Technical Leadership",
+    desc: "Mentoring engineers, shaping product roadmaps, and advising global clients on regulatory resilience.",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-purple-500"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`
+  }
 ];
 ---
 
-<section id="about" class="py-24 md:py-32 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
-  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16">
+<section id="about" class="py-24 md:py-32 bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800/80 relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6">
     
-    <div class="lg:col-span-5">
-      <h2 class="text-3xl md:text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 mb-8">
+    <!-- Title Section -->
+    <div class="max-w-3xl mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-50 mb-4">
         Who I Am
       </h2>
-      <div class="space-y-6 text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-        <p>
-          Mayank Raj Jaiswal is an Enterprise Security Architect, AI Security Practitioner, Researcher, Author, Speaker, and Technology Leader with more than fifteen years of experience designing secure enterprise software.
-        </p>
-        <p>
-          He specializes in Identity & Access Management, Cloud Security, PKI, HSM integration, OAuth, Zero Trust Architecture, Secure Software Engineering, DevSecOps, and Artificial Intelligence.
-        </p>
-        <p>
-          Throughout his career, he has worked with global organizations such as Samsung and Thales, leading architecture and engineering initiatives that secure millions of digital identities and enterprise transactions.
-        </p>
-        <p>
-          Beyond enterprise engineering, he actively contributes to cybersecurity awareness, technical education, research, mentoring, conference speaking, and open-source initiatives.
-        </p>
-        <p class="font-medium text-slate-900 dark:text-slate-50 pt-4 border-t border-slate-200 dark:border-slate-800">
-          He believes that technology evolves rapidly, but trust remains the foundation of every successful digital platform.
-        </p>
-      </div>
+      <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+        Mayank Raj Jaiswal is an Enterprise Security Architect, Researcher, and Speaker with 15+ years of software design expertise spanning global giants like Samsung and Thales.
+      </p>
     </div>
 
-    <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+    <!-- Layout Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
       
-      <div>
-        <h3 class="text-xl font-semibold text-slate-900 dark:text-slate-50 mb-6 flex items-center gap-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-          Engineering Philosophy
+      <!-- Pillars / Features Grid (Left Column) -->
+      <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {pillars.map(pillar => (
+          <div class="p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/40 hover:border-blue-500/50 dark:hover:border-blue-500/30 transition-all group hover:-translate-y-1 duration-300">
+            <div class="w-12 h-12 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300 mb-6" set:html={pillar.icon} />
+            <h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 mb-2">{pillar.title}</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{pillar.desc}</p>
+          </div>
+        ))}
+        
+        <!-- Interactive Philosophy Block -->
+        <div class="p-6 rounded-2xl border border-blue-100 dark:border-blue-900/20 bg-blue-50/30 dark:bg-blue-950/10 flex flex-col justify-between sm:col-span-2">
+          <div>
+            <h4 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase tracking-widest mb-4">Core Philosophy</h4>
+            <p class="text-base font-semibold text-slate-900 dark:text-slate-50 leading-relaxed">
+              "Technology evolves rapidly, but trust remains the foundation of every successful digital transaction."
+            </p>
+          </div>
+          <span class="text-xs text-slate-500 dark:text-slate-400 mt-6 block">Mayank Raj Jaiswal</span>
+        </div>
+      </div>
+
+      <!-- Philosophy Checklist (Right Column) -->
+      <div class="lg:col-span-5 space-y-8 bg-slate-50/50 dark:bg-slate-950/40 p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          Commitment to Excellence
         </h3>
+        
         <ul class="space-y-4">
           {philosophy.map(item => (
-            <li class="flex items-start gap-3 text-slate-600 dark:text-slate-300">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mt-1 text-slate-400 shrink-0"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>{item}</span>
+            <li class="flex items-start gap-3.5 text-sm text-slate-700 dark:text-slate-300">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400 mt-2 shrink-0"></span>
+              <span class="leading-relaxed">{item}</span>
             </li>
           ))}
         </ul>
-      </div>
-
-      <div>
-        <h3 class="text-xl font-semibold text-slate-900 dark:text-slate-50 mb-6 flex items-center gap-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><circle cx="12" cy="12" r="10"></circle><path d="m12 16 4-4-4-4"></path><path d="M8 12h8"></path></svg>
-          Current Focus
-        </h3>
-        <div class="flex flex-wrap gap-2">
-          {currentFocus.map(item => (
-            <span class="px-3 py-1.5 text-sm font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md border border-slate-200 dark:border-slate-700">
-              {item}
-            </span>
-          ))}
-        </div>
       </div>
 
     </div>

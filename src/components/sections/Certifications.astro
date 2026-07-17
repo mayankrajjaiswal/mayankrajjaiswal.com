@@ -3,11 +3,11 @@
 import { certifications } from '../../data/certifications';
 ---
 
-<section id="certifications" class="py-24 md:py-32 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
+<section id="certifications" class="py-24 md:py-32 bg-slate-50 dark:bg-slate-950 border-t border-slate-200/80 dark:border-slate-800/80 relative overflow-hidden">
   <div class="max-w-7xl mx-auto px-6">
     
     <div class="max-w-3xl mb-16">
-      <h2 class="text-3xl md:text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 mb-4">
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-50 mb-4">
         Education & Credentials
       </h2>
       <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -17,17 +17,17 @@ import { certifications } from '../../data/certifications';
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {certifications.map(cert => (
-        <div class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 flex items-start gap-4">
-          <div class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-700">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800/80 flex items-start gap-4 hover:-translate-y-1 hover:border-blue-500/50 dark:hover:border-blue-500/30 transition-all duration-300 shadow-sm">
+          <div class="w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-950 flex items-center justify-center shrink-0 border border-slate-100 dark:border-slate-800 shadow-inner">
             {cert.isFuture ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500 animate-pulse"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600 dark:text-blue-400"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><circle cx="12" cy="8" r="6"></circle><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path></svg>
             )}
           </div>
           <div>
             <h3 class="text-sm font-bold text-slate-900 dark:text-slate-50 leading-snug">{cert.name}</h3>
-            <p class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1 uppercase tracking-wider">{cert.issuer}</p>
+            <p class="text-xs font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-widest">{cert.issuer}</p>
           </div>
         </div>
       ))}

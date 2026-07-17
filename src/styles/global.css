@@ -5,18 +5,10 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* Geist and Inter are sans-serif */
   }
   
   body {
-    @apply bg-slate-50 text-slate-900 antialiased selection:bg-blue-200 selection:text-blue-900;
-  }
-
-  /* Default dark mode preference */
-  @media (prefers-color-scheme: dark) {
-    body {
-      @apply bg-slate-950 text-slate-50 selection:bg-blue-900 selection:text-blue-100;
-    }
+    @apply bg-slate-50 text-slate-900 antialiased selection:bg-blue-200 selection:text-blue-900 dark:bg-slate-950 dark:text-slate-50 dark:selection:bg-blue-900 dark:selection:text-blue-100 transition-colors duration-300;
   }
 }
 

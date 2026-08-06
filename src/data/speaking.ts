@@ -6,7 +6,9 @@ export interface SpeakingEngagement {
 
 export const speakingEngagements: SpeakingEngagement[] = [
   { id: "hackers-conf", role: "Lead Speaker & Organizing Member", event: "TheHackersConference" },
+  { id: "hackers-news", role: "Speaker", event: "TheHackerNews" },
   { id: "google-plex", role: "Speaker", event: "Google Business Group (GooglePlex)" },
+  { id: "google-dev", role: "Speaker", event: "Google Developer Group (GDG)" },
   { id: "iit-kanpur", role: "Speaker", event: "IIT Kanpur" },
   { id: "lpu", role: "Speaker", event: "Lovely Professional University (LPU)" },
   { id: "parul", role: "Speaker", event: "Parul University" },

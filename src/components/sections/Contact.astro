@@ -21,31 +21,31 @@
 
     <!-- Secure Contact Form with Premium visual borders -->
     <div class="bg-white/80 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-8 md:p-12 shadow-xl backdrop-blur-md max-w-2xl mx-auto mb-16">
-      <form action="https://api.web3forms.com/submit" method="POST" class="space-y-6">
+      <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="space-y-6">
         <!-- Web3Forms Access Key -->
-        <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE" />
+        <input type="hidden" name="access_key" value="d402893c-83d3-4a73-b85a-5385b8fa5d4a" />
         <!-- Anti-Spam Honeypot -->
         <input type="checkbox" name="botcheck" class="hidden" style="display: none;" />
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
             <label for="name" class="block text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Name</label>
-            <input 
-              type="text" 
-              name="name" 
-              id="name" 
-              required 
+            <input
+              type="text"
+              name="name"
+              id="name"
+              required
               placeholder="Your Name"
               class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-500/30 focus:border-blue-500 dark:focus:border-blue-500/50 transition duration-300 shadow-sm"
             />
           </div>
           <div>
             <label for="email" class="block text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Email Address</label>
-            <input 
-              type="email" 
-              name="email" 
-              id="email" 
-              required 
+            <input
+              type="email"
+              name="email"
+              id="email"
+              required
               placeholder="you@example.com"
               class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-500/30 focus:border-blue-500 dark:focus:border-blue-500/50 transition duration-300 shadow-sm"
             />
@@ -54,11 +54,11 @@
 
         <div>
           <label for="subject" class="block text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Subject</label>
-          <input 
-            type="text" 
-            name="subject" 
-            id="subject" 
-            required 
+          <input
+            type="text"
+            name="subject"
+            id="subject"
+            required
             placeholder="Consulting, Speaking engagement, Mentorship..."
             class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-500/30 focus:border-blue-500 dark:focus:border-blue-500/50 transition duration-300 shadow-sm"
           />
@@ -66,34 +66,110 @@
 
         <div>
           <label for="message" class="block text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-2">Message</label>
-          <textarea 
-            name="message" 
-            id="message" 
-            rows="5" 
-            required 
+          <textarea
+            name="message"
+            id="message"
+            rows="5"
+            required
             placeholder="Tell me about your project..."
             class="w-full px-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/40 text-slate-900 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-500/30 focus:border-blue-500 dark:focus:border-blue-500/50 transition duration-300 shadow-sm"
           ></textarea>
         </div>
 
-        <button 
-          type="submit" 
-          class="w-full inline-flex items-center justify-center px-6 py-4 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg"
+        <div id="contact-form-error" class="hidden rounded-xl border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm font-medium text-red-700 dark:text-red-400"></div>
+
+        <button
+          type="submit"
+          id="contact-form-submit"
+          class="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 transition-all hover:-translate-y-0.5 shadow-md hover:shadow-lg disabled:opacity-70 disabled:pointer-events-none disabled:translate-y-0"
         >
-          Send Message
+          <svg id="contact-form-spinner" class="hidden animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+          <span id="contact-form-submit-label">Send Message</span>
         </button>
       </form>
+
+      <!-- Success state, shown in place of the form after a successful submit -->
+      <div id="contact-form-success" class="hidden text-center py-8">
+        <div class="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><path d="M20 6 9 17l-5-5"></path></svg>
+        </div>
+        <h3 class="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-3">Message sent!</h3>
+        <p class="text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+          Thanks for reaching out — I've received your message and will get back to you soon.
+        </p>
+        <button
+          type="button"
+          id="contact-form-reset"
+          class="mt-8 inline-flex items-center justify-center px-6 py-3 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800/80 text-slate-900 dark:text-slate-100 font-semibold transition-all"
+        >
+          Send another message
+        </button>
+      </div>
     </div>
+
+    <script>
+      const form = document.getElementById('contact-form') as HTMLFormElement | null;
+      const errorBox = document.getElementById('contact-form-error');
+      const submitButton = document.getElementById('contact-form-submit') as HTMLButtonElement | null;
+      const submitLabel = document.getElementById('contact-form-submit-label');
+      const spinner = document.getElementById('contact-form-spinner');
+      const successPanel = document.getElementById('contact-form-success');
+      const resetButton = document.getElementById('contact-form-reset');
+
+      form?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!submitButton || !submitLabel || !spinner || !errorBox || !successPanel) return;
+
+        errorBox.classList.add('hidden');
+        errorBox.textContent = '';
+        submitButton.disabled = true;
+        submitLabel.textContent = 'Sending...';
+        spinner.classList.remove('hidden');
+
+        try {
+          const response = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { Accept: 'application/json' },
+          });
+          const result = await response.json();
+
+          if (result.success) {
+            form.classList.add('hidden');
+            successPanel.classList.remove('hidden');
+          } else {
+            errorBox.textContent = result.message || 'Something went wrong. Please try again or email me directly.';
+            errorBox.classList.remove('hidden');
+          }
+        } catch (err) {
+          errorBox.textContent = 'Could not send your message — please check your connection and try again, or email me directly.';
+          errorBox.classList.remove('hidden');
+        } finally {
+          submitButton.disabled = false;
+          submitLabel.textContent = 'Send Message';
+          spinner.classList.add('hidden');
+        }
+      });
+
+      resetButton?.addEventListener('click', () => {
+        form?.reset();
+        successPanel?.classList.add('hidden');
+        form?.classList.remove('hidden');
+      });
+    </script>
 
     <!-- Alternate Social Links rendered as clean visual cards -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
-      <a href="mailto:mayank@mayankrajjaiswal.com" class="flex items-center gap-3 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 hover:border-blue-500/40 dark:hover:border-blue-500/20 shadow-sm hover:shadow-md transition-all">
+      <a href="mailto:mayankrajjaiswal@gmail.com" class="flex items-center gap-3 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 hover:border-blue-500/40 dark:hover:border-blue-500/20 shadow-sm hover:shadow-md transition-all">
         <div class="w-10 h-10 rounded-xl bg-blue-500/10 dark:bg-blue-500/5 flex items-center justify-center shrink-0">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
         </div>
         <div>
           <p class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Email</p>
-          <p class="text-sm font-semibold text-slate-900 dark:text-slate-50">mayank@mayankrajjaiswal.com</p>
+          <p class="text-sm font-semibold text-slate-900 dark:text-slate-50">info@mjaiswal.com</p>
         </div>
       </a>
       

@@ -15,5 +15,6 @@ export const speakingEngagements: SpeakingEngagement[] = [
   { id: "gov-poly", role: "Speaker", event: "Government Polytechnic" },
   { id: "uptu", role: "Speaker", event: "UPTU Engineering Colleges" },
   { id: "bms", role: "Speaker", event: "BMS and other engineering institutions" },
-  { id: "coding-gurukul", role: "Speaker", event: "Coding Gurukul" }
+  { id: "coding-gurukul", role: "Speaker", event: "Coding Gurukul" },
+  { id: "many-more", role: "Speaker", event: "Many More..." }
 ];

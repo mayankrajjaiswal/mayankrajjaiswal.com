@@ -7,6 +7,7 @@ export interface Certification {
 
 export const certifications: Certification[] = [
   { id: "aws-architect", name: "AWS Certified Solutions Architect", issuer: "Amazon Web Services" },
+  { id: "aws-developer", name: "AWS Certified Developer", issuer: "Amazon Web Services" },
   { id: "aws-cloud", name: "AWS Certified Cloud Practitioner", issuer: "Amazon Web Services" },
   { id: "aws-ai", name: "AWS Certified AI Practitioner", issuer: "Amazon Web Services" },
   { id: "iitk-cyber", name: "Advanced Cybersecurity Program", issuer: "IIT Kanpur" },

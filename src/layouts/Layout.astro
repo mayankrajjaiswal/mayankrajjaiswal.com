@@ -97,6 +97,10 @@ const articleJsonLd = ogType === 'article' ? {
     <meta property="og:image" content={new URL('/og-image.jpg', Astro.site)} />
     {ogType === 'article' && <meta property="article:author" content="Mayank Raj Jaiswal" />}
     {ogType === 'article' && pubDate && <meta property="article:published_time" content={new Date(pubDate).toISOString()} />}
+    <meta property="og:profile:first_name" content="Mayank" />
+    <meta property="og:profile:last_name" content="Raj Jaiswal" />
+    <meta property="og:profile:username" content="mayankrajjaiswal" />
+    <meta property="og:profile:gender" content="male" />
     
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalURL} />

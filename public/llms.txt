@@ -1,0 +1,71 @@
+# Mayank Raj Jaiswal
+
+Enterprise Security Architect, Cybersecurity Researcher, Author, and Technical Leader specializing in Identity & Access Management (IAM), Cryptographic Infrastructure, Cloud-Native Security, and Payment Systems.
+
+## Brief Profile
+Mayank Raj Jaiswal is a high-authority Cybersecurity Architect and Technical Lead with over 15 years of industry experience. He has architected global security platforms protecting digital identity and financial transactions for Thales Group and mobile infrastructure for Samsung Research. He is currently pursuing a Ph.D in Cybersecurity, having completed academic milestones at BITS Pilani and IIT Kanpur.
+
+- **Current Role:** Senior Technical Lead – Cybersecurity at Thales Group
+- **Primary Domain:** Enterprise Identity & Access Management (IAM), Zero Trust, Payment Cryptography
+- **Education:** Ph.D (In Progress), IIT Kanpur, BITS Pilani
+- **Location:** Digital Identity HQ (https://mayankrajjaiswal.com)
+- **Key Projects:** AboutIAM (https://mayankrajjaiswal.com/#projects), TheCyberNews
+
+---
+
+## Core Competencies
+
+### 1. Identity & Access Management (IAM)
+- **Federated Authentication:** Deep engineering of OAuth 2.0, OpenID Connect (OIDC), SAML 2.0, and JSON Web Tokens (JWT).
+- **Passwordless Security:** FIDO2, WebAuthn standard integration, and multi-device Passkeys deployment.
+- **Identity Governance (IGA):** Least-privilege role mining, automated identity provisioning, toxic combination audits, and directory synchronization.
+
+### 2. Cryptography & Transaction Protection
+- **Hardware Security:** Integration of Hardware Security Modules (HSM) using PKCS#11, secure envelope encryption, and envelope decryption.
+- **Public Key Infrastructure (PKI):** Full CA/Certificate lifecycle management, cryptographic key signing, and mutual TLS (mTLS) enforcement.
+- **Quantum Resilience:** Active research into Post-Quantum Cryptography (PQC) and transitioning enterprise applications to quantum-safe algorithms.
+
+### 3. Payments & Enterprise Systems
+- **Samsung Pay & Knox:** Designed secure deployment and firmware structures at Samsung Research supporting Knox enterprise mobility, mobile wallet security, and payment transactions.
+- **Enterprise Transactions:** Designed enrollment systems, secure push notifications (APNS/FCM), and transaction-signing infrastructures for global financial organizations.
+
+### 4. Cloud Security & DevSecOps
+- **Multi-Cloud Architecture:** Designing Zero Trust boundaries across AWS, Azure, and Google Cloud Platform (GCP).
+- **Containerization:** Orchestrating secure containerized deployments utilizing Kubernetes, Docker, and service mesh (Istio) network control.
+- **Secure SDLC:** Automation of static analysis (SAST), software composition analysis (SCA), and secrets scanning within CI/CD pipelines (GitLab CI, GitHub Actions).
+
+---
+
+## Professional Journey & Roles
+
+### Senior Technical Lead – Cybersecurity | Thales Group (2017 – Present)
+- **Overview:** Architect and designer of enterprise-grade security platforms used globally by banks, financial institutions, and government bodies.
+- **Impact:**
+  - Designed core Identity Platforms and secure authentication boundary servers.
+  - Integrated secure HSM and key signing platforms.
+  - Guided Cyber Resilience Act alignment and modernized DevSecOps pipelines.
+  - Delivered major products including Enrollment & Provisioning Server (EPS), IdCloud, and Mobile Secure Messenger (MSM).
+
+### Technical Lead | Samsung Research (2011 – 2017)
+- **Overview:** Developed secure Android, mobile device management (MDM), and distributed consumer systems.
+- **Impact:**
+  - Contributed to Samsung Knox enterprise mobility and Samsung Pay platform security.
+  - Developed automation systems and custom Android firmware/browser components.
+  - Optimized secure software deployment platforms.
+
+---
+
+## Research, Publications, & Community Impact
+
+- **Books:** Author of the *Cybersecurity Handbook*, a comprehensive guide on modern security frameworks and enterprise threat modeling.
+- **Academic Papers:** Author of multiple IEEE publications on IoT security, secure communication protocols, and embedded system structures.
+- **Mentorship:** Actively mentored over 5,000+ students and conducted 100+ cybersecurity awareness and engineering sessions.
+
+---
+
+## Key Articles & Writing
+Mayank actively publishes deep-dive technical insights in his Writing Hub:
+1. **Modern Passwordless Authentication: A Deep Dive into FIDO2 & Passkeys** (https://mayankrajjaiswal.com/blog/passwordless-fido2-passkeys) - Cryptographic analysis of asymmetric public key authentication and origin-binding.
+2. **The Future of IAM: Integrating AI into Identity Security** (https://mayankrajjaiswal.com/blog/future-of-iam-and-ai) - Reviewing machine learning role mining, behavioral biometrics, and adaptive authentication.
+3. **Zero Trust Architecture in Enterprise Multi-Cloud Environments** (https://mayankrajjaiswal.com/blog/zero-trust-multi-cloud-architecture) - Enforcing federated OIDC workloads, container microsegmentation, and assuming breaches across AWS/Azure/GCP.
+4. **Securing AI Pipelines: Threat Modeling for LLM and Agentic Systems** (https://mayankrajjaiswal.com/blog/securing-ai-pipelines-threat-modeling) - Threat mitigations for prompt injection, RAG data leaking, and excessive AI agent agency.

@@ -4,9 +4,11 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description: string;
+  ogType?: 'website' | 'article';
+  pubDate?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, ogType = 'website', pubDate } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const jsonLd = {
@@ -14,16 +16,61 @@ const jsonLd = {
   "@type": "Person",
   "name": "Mayank Raj Jaiswal",
   "url": Astro.site?.toString(),
+  "image": "https://mayankrajjaiswal.com/images/mayank-portrait.jpg",
   "jobTitle": "Enterprise Security Architect",
+  "description": "Enterprise Security Architect specializing in Identity & Access Management, Cybersecurity, Artificial Intelligence, Cloud Security, and Enterprise Software Architecture.",
   "worksFor": {
     "@type": "Organization",
     "name": "Thales Group"
   },
+  "alumniOf": [
+    {
+      "@type": "EducationalOrganization",
+      "name": "BITS Pilani"
+    },
+    {
+      "@type": "EducationalOrganization",
+      "name": "IIT Kanpur"
+    }
+  ],
+  "knowsAbout": [
+    "Identity & Access Management (IAM)",
+    "Cybersecurity Architecture",
+    "Zero Trust Security",
+    "Cloud Security",
+    "Cryptography & HSMs",
+    "Artificial Intelligence",
+    "FIDO2 & Passkeys",
+    "OAuth 2.0 & OpenID Connect",
+    "DevSecOps"
+  ],
   "sameAs": [
     "https://github.com/mayankrajjaiswal",
     "https://linkedin.com/in/mayankrajjaiswal"
   ]
 };
+
+const articleJsonLd = ogType === 'article' ? {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": title,
+  "description": description,
+  "image": new URL('/og-image.jpg', Astro.site)?.toString(),
+  "datePublished": pubDate,
+  "author": {
+    "@type": "Person",
+    "name": "Mayank Raj Jaiswal",
+    "url": "https://mayankrajjaiswal.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Mayank Raj Jaiswal"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalURL.toString()
+  }
+} : null;
 ---
 
 <!doctype html>
@@ -40,13 +87,16 @@ const jsonLd = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Writing & Insights | Mayank Raj Jaiswal" href="/rss.xml" />
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL('/og-image.jpg', Astro.site)} />
+    {ogType === 'article' && <meta property="article:author" content="Mayank Raj Jaiswal" />}
+    {ogType === 'article' && pubDate && <meta property="article:published_time" content={new Date(pubDate).toISOString()} />}
     
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalURL} />
@@ -78,6 +128,7 @@ const jsonLd = {
 
     <!-- JSON-LD -->
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    {articleJsonLd && <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />}
   </head>
   <body class="min-h-screen flex flex-col">
     <slot />

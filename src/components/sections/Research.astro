@@ -37,7 +37,7 @@ import { researchTopics, futureResearch, publications } from '../../data/researc
       </div>
 
       <!-- Future Vision Checklist -->
-      <div class="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-8 shadow-sm">
+      <div class="lg:col-span-5 bg-gradient-to-br from-white to-indigo-50/20 dark:from-slate-900 dark:to-slate-950/40 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-8 shadow-sm">
         <h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 mb-6 flex items-center gap-3">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
           Future Research Vision
@@ -59,7 +59,7 @@ import { researchTopics, futureResearch, publications } from '../../data/researc
       <h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 mb-6">Featured Publications</h3>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         {publications.map(pub => (
-          <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800/80 flex flex-col hover:-translate-y-1.5 hover:border-blue-500/50 dark:hover:border-blue-500/30 transition-all duration-300 shadow-sm hover:shadow-md">
+          <div class="bg-gradient-to-br from-white to-slate-50/50 dark:from-slate-900 dark:to-slate-950/20 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800/80 flex flex-col hover:-translate-y-1.5 hover:border-blue-500/50 dark:hover:border-blue-500/30 transition-all duration-300 shadow-sm hover:shadow-md">
             <div class="flex items-center justify-between mb-4">
               <span class="text-[10px] font-extrabold uppercase tracking-widest text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/10 px-2 py-1 rounded-md border border-blue-100 dark:border-blue-900/20">
                 {pub.type}

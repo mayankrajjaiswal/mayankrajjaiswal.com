@@ -80,7 +80,7 @@ const links = [
       </button>
 
       <!-- Mobile Menu Hamburger -->
-      <button id="mobile-menu-btn" class="p-2 text-slate-600 dark:text-slate-400 rounded-lg" aria-label="Toggle Menu">
+      <button id="mobile-menu-btn" class="p-2 text-slate-600 dark:text-slate-400 rounded-lg" aria-label="Toggle Menu" aria-expanded="false" aria-controls="mobile-drawer">
         <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="4" x2="20" y1="12" y2="12"></line>
           <line x1="4" x2="20" y1="6" y2="6"></line>
@@ -123,9 +123,10 @@ const links = [
     const drawerLinks = document.querySelectorAll('[data-drawer-link]');
 
     const toggleMenu = () => {
-      const isExpanded = mobileDrawer.classList.toggle('hidden');
-      menuIcon.classList.toggle('hidden', !isExpanded);
-      closeIcon.classList.toggle('hidden', isExpanded);
+      const isHidden = mobileDrawer.classList.toggle('hidden');
+      menuIcon.classList.toggle('hidden', !isHidden);
+      closeIcon.classList.toggle('hidden', isHidden);
+      mobileMenuBtn.setAttribute('aria-expanded', String(!isHidden));
     };
 
     if (mobileMenuBtn && mobileDrawer) {
@@ -137,7 +138,19 @@ const links = [
           mobileDrawer.classList.add('hidden');
           menuIcon.classList.remove('hidden');
           closeIcon.classList.add('hidden');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
         });
+      });
+
+      // Press Escape key to close mobile drawer menu
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !mobileDrawer.classList.contains('hidden')) {
+          mobileDrawer.classList.add('hidden');
+          menuIcon.classList.remove('hidden');
+          closeIcon.classList.add('hidden');
+          mobileMenuBtn.setAttribute('aria-expanded', 'false');
+          mobileMenuBtn.focus();
+        }
       });
     }
 

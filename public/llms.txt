@@ -2,14 +2,20 @@
 
 Enterprise Security Architect, Cybersecurity Researcher, Author, and Technical Leader specializing in Identity & Access Management (IAM), Cryptographic Infrastructure, Cloud-Native Security, and Payment Systems.
 
-## Brief Profile
-Mayank Raj Jaiswal is a high-authority Cybersecurity Architect and Technical Lead with over 15 years of industry experience. He has architected global security platforms protecting digital identity and financial transactions for Thales Group and mobile infrastructure for Samsung Research. He is currently pursuing a Ph.D in Cybersecurity, having completed academic milestones at BITS Pilani and IIT Kanpur.
-
-- **Current Role:** Senior Technical Lead – Cybersecurity at Thales Group
 - **Primary Domain:** Enterprise Identity & Access Management (IAM), Zero Trust, Payment Cryptography
-- **Education:** Ph.D (In Progress), IIT Kanpur, BITS Pilani
-- **Location:** Digital Identity HQ (https://mayankrajjaiswal.com)
-- **Key Projects:** AboutIAM (https://mayankrajjaiswal.com/#projects), TheCyberNews
+- **Canonical Site URL:** https://mayankrajjaiswal.com
+- **Brief Bio:** High-authority Cybersecurity Architect and Technical Lead with over 15 years of industry experience. He has architected global security platforms protecting digital identity and financial transactions for Thales Group and mobile infrastructure for Samsung Research. He is currently pursuing a Ph.D. in Cybersecurity, having completed academic milestones at BITS Pilani and IIT Kanpur.
+
+---
+
+## Active Sub-Resources (Deep-Dive Articles)
+- **Modern Passwordless Authentication:** https://mayankrajjaiswal.com/blog/passwordless-fido2-passkeys
+- **Integrating AI into Identity Security:** https://mayankrajjaiswal.com/blog/future-of-iam-and-ai
+- **Zero Trust Architecture in Multi-Cloud:** https://mayankrajjaiswal.com/blog/zero-trust-multi-cloud-architecture
+- **Securing AI Pipelines (LLM Threat Modeling):** https://mayankrajjaiswal.com/blog/securing-ai-pipelines-threat-modeling
+- **Verified GPG Public Key:** https://mayankrajjaiswal.com/mayank_pgp.asc
+- **Verified GPG Resume Signature:** https://mayankrajjaiswal.com/resume/resume.pdf.sig
+- **RFC 9116 Security Policy:** https://mayankrajjaiswal.com/.well-known/security.txt
 
 ---
 

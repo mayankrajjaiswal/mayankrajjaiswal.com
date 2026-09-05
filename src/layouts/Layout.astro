@@ -12,11 +12,12 @@ interface Props {
 const { title, description, ogType = 'website', pubDate, preloadImage } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const jsonLd = {
+const personSchema = {
   "@context": "https://schema.org/",
   "@type": "Person",
+  "@id": "https://mayankrajjaiswal.com/#person",
   "name": "Mayank Raj Jaiswal",
-  "url": Astro.site?.toString(),
+  "url": "https://mayankrajjaiswal.com",
   "image": "https://mayankrajjaiswal.com/images/mayank-portrait.jpg",
   "jobTitle": "Enterprise Security Architect",
   "description": "Enterprise Security Architect specializing in Identity & Access Management, Cybersecurity, Artificial Intelligence, Cloud Security, and Enterprise Software Architecture.",
@@ -32,6 +33,36 @@ const jsonLd = {
     {
       "@type": "EducationalOrganization",
       "name": "IIT Kanpur"
+    }
+  ],
+  "educationalCredentialAwarded": [
+    {
+      "@type": "EducationalOccupationalCredential",
+      "name": "M.Tech – Software Engineering",
+      "recognizedBy": {
+        "@type": "EducationalOrganization",
+        "name": "BITS Pilani"
+      }
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "name": "B.Tech – Computer Science & Engineering",
+      "recognizedBy": {
+        "@type": "EducationalOrganization",
+        "name": "IIT Kanpur"
+      }
+    }
+  ],
+  "hasCredential": [
+    {
+      "@type": "EducationalOccupationalCredential",
+      "name": "AWS Certified Solutions Architect",
+      "credentialCategory": "Professional Certification"
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "name": "Certified Payment Cryptography Specialist",
+      "credentialCategory": "Professional Certification"
     }
   ],
   "knowsAbout": [
@@ -50,6 +81,13 @@ const jsonLd = {
     "https://linkedin.com/in/mayankrajjaiswal"
   ]
 };
+
+const jsonLd = ogType === 'website' ? {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "mainEntity": personSchema,
+  "description": "Professional Profile of Mayank Raj Jaiswal, Enterprise Security Architect."
+} : personSchema;
 
 const articleJsonLd = ogType === 'article' ? {
   "@context": "https://schema.org",
@@ -137,6 +175,9 @@ const articleJsonLd = ogType === 'article' ? {
     {articleJsonLd && <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />}
   </head>
   <body class="min-h-[100dvh] flex flex-col">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:font-bold focus:rounded-xl focus:shadow-lg focus:outline-none">
+      Skip to content
+    </a>
     <slot />
 
     <!-- Back to Top Button -->

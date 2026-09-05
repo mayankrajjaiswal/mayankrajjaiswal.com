@@ -1,0 +1,18 @@
+/* TEAM */
+  Security Architect: Mayank Raj Jaiswal
+  Contact: info@mjaiswal.com
+  Location: India
+  LinkedIn: https://linkedin.com/in/mayankrajjaiswal
+  GitHub: https://github.com/mayankrajjaiswal
+
+/* THANKS */
+  Astro Framework Core Team
+  Tailwind CSS Authors
+  Lucide Icon Designers
+
+/* SITE TECH STACK */
+  Built with: Astro (v5.x)
+  Styled with: Tailwind CSS (v3.x)
+  Tested with: Playwright, Axe-Core Accessibility
+  Language: TypeScript
+  Standards: RFC 9116 (security.txt), RFC 2068 (humans.txt), WCAG AAA A11y Standard compliance.

@@ -36,7 +36,7 @@ const otherPosts = allPosts
   <!-- Scroll Progress Indicator Bar -->
   <div id="scroll-progress" class="fixed top-16 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-600 z-50 w-0 transition-all duration-100 ease-out"></div>
 
-  <main class="flex-grow pt-32 pb-24 bg-white dark:bg-slate-950">
+  <main id="main-content" tabindex="-1" class="flex-grow pt-32 pb-24 bg-white dark:bg-slate-950 outline-none">
     <article class="max-w-3xl mx-auto px-6">
       
       <div class="mb-10 text-center md:text-left">
@@ -142,7 +142,7 @@ const otherPosts = allPosts
                   </p>
                 </div>
                 <span class="text-xs font-bold text-blue-600 dark:text-blue-400 inline-flex items-center gap-1 mt-4 group-hover:underline">
-                  Read article
+                  Read article <span class="sr-only">about {post.data.title}</span>
                   <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-1"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </span>
               </a>

@@ -1,0 +1,91 @@
+---
+// src/components/sections/RecentWriting.astro
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// Map top 3 posts and calculate reading times
+const recentPosts = posts.slice(0, 3).map(post => {
+  const wordCount = post.body.split(/\s+/).filter(Boolean).length;
+  const readingTime = Math.ceil(wordCount / 200);
+  return { ...post, readingTime };
+});
+---
+
+<section id="recent-writing" class="py-16 sm:py-24 md:py-32 bg-slate-50 dark:bg-slate-950 border-t border-slate-200/80 dark:border-slate-800/80 relative overflow-hidden">
+  <!-- Ambient Backdrop Glow -->
+  <div class="absolute bottom-1/2 right-0 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+  <div class="max-w-7xl mx-auto px-6">
+    
+    <!-- Section Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+      <div class="max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-bold text-blue-600 dark:text-blue-400 mb-4 uppercase tracking-widest">
+          Publications & Insights
+        </div>
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
+          Recent Technical Writing
+        </h2>
+        <p class="text-lg text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
+          Deep dives into modern cryptographic transitions, federated identity governance, payment security, and secure artificial intelligence pipelines.
+        </p>
+      </div>
+      
+      <a 
+        href="/blog" 
+        class="inline-flex items-center justify-center px-5 py-3 rounded-xl border border-slate-300 dark:border-slate-750 hover:bg-slate-100 dark:hover:bg-slate-900 text-sm font-bold text-slate-950 dark:text-slate-100 transition-all shadow-sm hover:shadow shrink-0"
+      >
+        View All Articles
+      </a>
+    </div>
+
+    <!-- Recent Posts Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {recentPosts.map(post => (
+        <a 
+          href={`/blog/${post.slug}`}
+          data-glow
+          class="group bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
+        >
+          <div>
+            <!-- Category Tag & Reading Time -->
+            <div class="flex items-center justify-between gap-4 mb-4">
+              <span class="px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400 rounded-md border border-blue-100 dark:border-blue-900/20">
+                {post.data.tags[0] || 'Security'}
+              </span>
+              <span class="text-xs text-slate-400 dark:text-slate-500 font-medium flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline shrink-0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                {post.readingTime} min read
+              </span>
+            </div>
+
+            <!-- Title -->
+            <h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug mb-3">
+              {post.data.title}
+            </h3>
+
+            <!-- Description -->
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-3">
+              {post.data.description}
+            </p>
+          </div>
+
+          <!-- Date & Signpost Link -->
+          <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between">
+            <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+              {new Date(post.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+            </span>
+            <span class="text-xs font-bold text-blue-600 dark:text-blue-400 inline-flex items-center gap-1 group-hover:underline">
+              Read <span class="sr-only">about {post.data.title}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-1"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+
+  </div>
+</section>

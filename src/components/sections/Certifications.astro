@@ -121,15 +121,15 @@ import { certifications } from '../../data/certifications';
           Run the following shell commands in your computer's terminal after downloading the PDF to confirm that its content matches our cryptographically signed signature:
         </p>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-slate-950 border border-slate-850 rounded-xl p-4 font-mono">
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono">
             <span class="text-xs font-bold text-blue-400 block mb-2 uppercase tracking-widest">Windows (PowerShell)</span>
             <code class="text-[11px] text-slate-300 select-all block break-all font-mono">Get-FileHash .\Mayank_Raj_Jaiswal_Resume.pdf -Algorithm SHA256</code>
           </div>
-          <div class="bg-slate-950 border border-slate-850 rounded-xl p-4 font-mono">
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono">
             <span class="text-xs font-bold text-indigo-400 block mb-2 uppercase tracking-widest">macOS / Linux (Hash)</span>
             <code class="text-[11px] text-slate-300 select-all block break-all font-mono">shasum -a 256 Mayank_Raj_Jaiswal_Resume.pdf</code>
           </div>
-          <div class="bg-slate-950 border border-slate-850 rounded-xl p-4 font-mono">
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono">
             <span class="text-xs font-bold text-emerald-400 block mb-2 uppercase tracking-widest">GPG Key Verification</span>
             <code class="text-[10px] text-slate-300 select-all block leading-normal font-mono"># Import key & verify sig<br/>curl -s https://mayankrajjaiswal.com/mayank_pgp.asc | gpg --import<br/>gpg --verify .\Mayank_Raj_Jaiswal_Resume.pdf.sig .\Mayank_Raj_Jaiswal_Resume.pdf</code>
           </div>

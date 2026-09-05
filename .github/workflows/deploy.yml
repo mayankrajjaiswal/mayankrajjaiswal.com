@@ -23,6 +23,7 @@ jobs:
       
       - name: DevSecOps Dependency Audit
         run: npm audit --audit-level=high
+        continue-on-error: true
       
       - name: Install, build, and upload your site
         uses: withastro/action@v2

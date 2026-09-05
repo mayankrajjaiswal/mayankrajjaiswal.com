@@ -32,6 +32,10 @@ const otherPosts = allPosts
   pubDate={frontmatter.pubDate}
 >
   <Header />
+  
+  <!-- Scroll Progress Indicator Bar -->
+  <div id="scroll-progress" class="fixed top-16 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-600 z-50 w-0 transition-all duration-100 ease-out"></div>
+
   <main class="flex-grow pt-32 pb-24 bg-white dark:bg-slate-950">
     <article class="max-w-3xl mx-auto px-6">
       
@@ -153,6 +157,7 @@ const otherPosts = allPosts
 </Layout>
 
 <script is:inline>
+  // 1. Copy Link to Clipboard
   const setupCopyLink = () => {
     const btn = document.getElementById('copy-link-btn');
     if (!btn) return;
@@ -179,6 +184,30 @@ const otherPosts = allPosts
     btn.addEventListener('click', handleCopy);
   };
 
+  // 2. Mobile Reading Progress Indicator
+  const setupScrollProgress = () => {
+    const progress = document.getElementById('scroll-progress');
+    if (!progress) return;
+
+    const updateProgress = () => {
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      progress.style.width = scrolled + '%';
+    };
+
+    window.removeEventListener('scroll', updateProgress);
+    window.addEventListener('scroll', updateProgress);
+    updateProgress(); // Run once initially
+  };
+
+  // Run initial setups
   setupCopyLink();
-  document.addEventListener('astro:after-swap', setupCopyLink);
+  setupScrollProgress();
+
+  // Support SPA transitions
+  document.addEventListener('astro:after-swap', () => {
+    setupCopyLink();
+    setupScrollProgress();
+  });
 </script>

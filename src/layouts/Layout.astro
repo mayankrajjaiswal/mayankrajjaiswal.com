@@ -136,7 +136,7 @@ const articleJsonLd = ogType === 'article' ? {
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     {articleJsonLd && <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />}
   </head>
-  <body class="min-h-screen flex flex-col">
+  <body class="min-h-[100dvh] flex flex-col">
     <slot />
 
     <!-- Back to Top Button -->

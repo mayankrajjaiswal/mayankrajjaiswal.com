@@ -12,6 +12,7 @@ export const speakingEngagements: SpeakingEngagement[] = [
   { id: "iit-kanpur", role: "Speaker", event: "IIT Kanpur" },
   { id: "lpu", role: "Speaker", event: "Lovely Professional University (LPU)" },
   { id: "parul", role: "Speaker", event: "Parul University" },
+  { id: "metro", role: "Speaker", event: "Metro University" },
   { id: "gov-poly", role: "Speaker", event: "Government Polytechnic" },
   { id: "uptu", role: "Speaker", event: "UPTU Engineering Colleges" },
   { id: "bms", role: "Speaker", event: "BMS and other engineering institutions" },

@@ -11,8 +11,12 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await entry.render();
+
+// Calculate reading time on the server
+const wordCount = entry.body.split(/\s+/).filter(Boolean).length;
+const readingTime = Math.ceil(wordCount / 200);
 ---
 
-<BlogPostLayout frontmatter={entry.data}>
+<BlogPostLayout frontmatter={entry.data} slug={entry.slug} readingTime={readingTime}>
   <Content />
 </BlogPostLayout>

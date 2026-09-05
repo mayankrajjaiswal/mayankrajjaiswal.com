@@ -18,9 +18,25 @@ const posts = (await getCollection('blog')).sort(
     <div class="max-w-4xl mx-auto px-6">
       
       <div class="max-w-2xl mb-16">
-        <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-50 mb-4">
-          Writing & Insights
-        </h1>
+        <div class="flex items-center gap-4 mb-4">
+          <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
+            Writing & Insights
+          </h1>
+          <a 
+            href="/rss.xml" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="p-2 text-slate-500 hover:text-orange-500 dark:text-slate-400 dark:hover:text-orange-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" 
+            aria-label="RSS Feed"
+            title="Subscribe to RSS Feed"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 11a9 9 0 0 1 9 9"></path>
+              <path d="M4 4a16 16 0 0 1 16 16"></path>
+              <circle cx="5" cy="19" r="1"></circle>
+            </svg>
+          </a>
+        </div>
         <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
           Sharing deep technical analysis, industry trends, and research at the intersection of cybersecurity, artificial intelligence, and enterprise identity architecture.
         </p>

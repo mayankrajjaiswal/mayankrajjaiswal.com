@@ -4,15 +4,22 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="py-12 bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
-  <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+  <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6 font-sans">
     
-    <div class="text-center md:text-left">
-      <p class="text-sm font-semibold text-slate-900 dark:text-slate-50 mb-1">
+    <div class="text-center md:text-left space-y-2">
+      <p class="text-sm font-semibold text-slate-900 dark:text-slate-50">
         Building Trust Through Security.
       </p>
-      <p class="text-xs text-slate-600 dark:text-slate-400">
-        Enterprise Security &bull; Identity &bull; AI &bull; Research &bull; Leadership
-      </p>
+      <!-- Compliance & Social Bar -->
+      <div class="flex flex-wrap justify-center md:justify-start items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+        <a href="/.well-known/security.txt" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">security.txt</a>
+        <span class="text-slate-300 dark:text-slate-800 select-none">&bull;</span>
+        <a href="/humans.txt" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">humans.txt</a>
+        <span class="text-slate-300 dark:text-slate-800 select-none">&bull;</span>
+        <a href="https://linkedin.com/in/mayankrajjaiswal" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">LinkedIn</a>
+        <span class="text-slate-300 dark:text-slate-800 select-none">&bull;</span>
+        <a href="https://github.com/mayankrajjaiswal" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">GitHub</a>
+      </div>
     </div>
 
     <div class="text-center md:text-right">

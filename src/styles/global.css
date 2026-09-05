@@ -25,3 +25,162 @@
     transition-delay: 0s !important;
   }
 }
+
+/* ==========================================
+   Executive Print-to-PDF Stylesheet
+   ========================================== */
+@media print {
+  /* Hide all interactive, navigational, or ambient elements */
+  header,
+  footer,
+  #back-to-top,
+  #theme-toggle,
+  #theme-toggle-mobile,
+  #mobile-menu-btn,
+  #contact-form,
+  button,
+  form,
+  a[href^="#contact"],
+  .absolute,
+  .pointer-events-none,
+  [aria-hidden="true"] {
+    display: none !important;
+  }
+
+  /* Set standard paper sizing and pure ink-saving colors */
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Format sections to stack statically without clipped boundaries */
+  main {
+    padding-top: 0 !important;
+  }
+
+  section {
+    page-break-inside: avoid !important;
+    padding: 1.5rem 0 !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  h1 {
+    font-size: 26pt !important;
+    font-weight: 700 !important;
+    color: #000000 !important;
+    margin-bottom: 8pt !important;
+    line-height: 1.1 !important;
+  }
+
+  h2 {
+    font-size: 16pt !important;
+    font-weight: 700 !important;
+    color: #000000 !important;
+    margin-top: 20pt !important;
+    margin-bottom: 8pt !important;
+    border-bottom: 1.5px solid #e2e8f0 !important;
+    padding-bottom: 4px !important;
+    page-break-after: avoid !important;
+  }
+
+  h3 {
+    font-size: 12pt !important;
+    font-weight: 700 !important;
+    margin-top: 12pt !important;
+    margin-bottom: 4pt !important;
+    page-break-after: avoid !important;
+  }
+
+  p, li, span {
+    font-size: 10pt !important;
+    color: #1e293b !important;
+  }
+
+  /* Unfold complex layout grids into simple vertical streams */
+  .grid {
+    display: block !important;
+  }
+
+  .grid > * {
+    margin-bottom: 1rem !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Re-format standard boxes for printing */
+  .bg-gradient-to-br, 
+  .bg-slate-50, 
+  .dark\:bg-slate-950, 
+  .bg-white, 
+  .bg-white\/80 {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Timeline flattening */
+  .relative.border-l {
+    border-left: none !important;
+    margin-left: 0 !important;
+  }
+
+  .relative.pl-8, 
+  .relative.pl-16 {
+    padding-left: 0 !important;
+  }
+
+  /* Convert tech badges into a clean readable tag line */
+  span.px-3.py-1\.5, 
+  span.px-2\.5.py-1,
+  span.px-2 {
+    display: inline-block !important;
+    border: 1px solid #cbd5e1 !important;
+    background: #f8fafc !important;
+    color: #0f172a !important;
+    margin: 2px !important;
+    padding: 2px 6px !important;
+    font-size: 8pt !important;
+    border-radius: 4px !important;
+  }
+
+  /* Force natural section boundaries across printed pages */
+  #experience, 
+  #projects, 
+  #research, 
+  #certifications {
+    page-break-before: always !important;
+  }
+}
+
+/* ==========================================
+   Bespoke Card Cursor Spotlight Hover Glow
+   ========================================== */
+[data-glow] {
+  position: relative;
+  transition: border-color 0.3s ease;
+}
+
+[data-glow]::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+    rgba(59, 130, 246, 0.12),
+    transparent 40%
+  );
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+[data-glow]:hover::before {
+  opacity: 1;
+}

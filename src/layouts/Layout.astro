@@ -180,5 +180,42 @@ const articleJsonLd = ogType === 'article' ? {
       setupBackToTop();
       document.addEventListener('astro:after-swap', setupBackToTop);
     </script>
+
+    <!-- PWA Service Worker Registration -->
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').then(registration => {
+            console.log('ServiceWorker registered successfully with scope: ', registration.scope);
+          }).catch(err => {
+            console.warn('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+    </script>
+
+    <!-- Card Spotlight Glow Listener -->
+    <script is:inline>
+      const setupSpotlightGlow = () => {
+        const glowCards = document.querySelectorAll('[data-glow]');
+        
+        glowCards.forEach(card => {
+          const handleMouseMove = (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+          };
+          
+          card.removeEventListener('mousemove', handleMouseMove);
+          card.addEventListener('mousemove', handleMouseMove);
+        });
+      };
+
+      setupSpotlightGlow();
+      document.addEventListener('astro:after-swap', setupSpotlightGlow);
+    </script>
   </body>
 </html>

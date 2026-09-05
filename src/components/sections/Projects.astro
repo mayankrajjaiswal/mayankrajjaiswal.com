@@ -38,7 +38,7 @@ const getCategoryIcon = (category: string) => {
         const isPremium = project.status === 'Active';
         
         return (
-          <div class={`group flex flex-col rounded-3xl p-8 border hover:-translate-y-1.5 transition-all duration-300 ${
+          <div data-glow class={`group flex flex-col rounded-3xl p-8 border hover:-translate-y-1.5 transition-all duration-300 ${
             isPremium 
               ? 'border-blue-200 dark:border-blue-900/40 bg-gradient-to-b from-blue-50/20 to-transparent dark:from-blue-950/10 dark:to-transparent shadow-md' 
               : 'border-slate-200/80 dark:border-slate-800/80 bg-slate-50/40 dark:bg-slate-950/20'

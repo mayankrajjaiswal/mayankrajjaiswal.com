@@ -48,7 +48,7 @@ const pillars = [
       <!-- Pillars / Features Grid (Left Column) -->
       <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
         {pillars.map(pillar => (
-          <div class="p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/40 hover:border-blue-500/50 dark:hover:border-blue-500/30 transition-all group hover:-translate-y-1 duration-300">
+          <div data-glow class="p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/40 hover:border-blue-500/50 dark:hover:border-blue-500/30 transition-all group hover:-translate-y-1 duration-300">
             <div class="w-12 h-12 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300 mb-6" set:html={pillar.icon} />
             <h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 mb-2">{pillar.title}</h3>
             <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{pillar.desc}</p>

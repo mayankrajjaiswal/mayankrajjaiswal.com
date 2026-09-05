@@ -1,0 +1,564 @@
+---
+// src/components/sections/SecuritySimulator.astro
+---
+
+<section id="simulator" class="py-16 sm:py-24 md:py-32 bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800/80 relative overflow-hidden">
+  <!-- Soft Background Blur -->
+  <div class="absolute top-1/2 left-0 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+  <div class="max-w-7xl mx-auto px-6">
+    
+    <div class="max-w-3xl mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-50 mb-4">
+        Interactive Security Sandbox
+      </h2>
+      <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+        Test and visualize standard enterprise-grade security mechanisms. Toggle between simulators below to watch cryptographic assertions and tokens compile in real-time.
+      </p>
+    </div>
+
+    <!-- Simulator Workspace Dashboard -->
+    <div class="max-w-5xl mx-auto bg-slate-50 dark:bg-slate-950/40 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 md:p-8 shadow-xl backdrop-blur-md">
+      
+      <!-- Simulators Tab Switcher -->
+      <div class="flex border-b border-slate-200 dark:border-slate-800 pb-px mb-8 overflow-x-auto gap-2">
+        <button 
+          id="tab-fido2"
+          class="px-5 py-3 text-sm font-bold border-b-2 border-blue-500 text-blue-600 dark:text-blue-400 shrink-0 transition-all flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          FIDO2 Passkeys
+        </button>
+        <button 
+          id="tab-oauth"
+          class="px-5 py-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-50 shrink-0 transition-all flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+          OAuth 2.0 Flow
+        </button>
+      </div>
+
+      <!-- FIDO2 Passkeys Content -->
+      <div id="content-fido2" class="space-y-8 animate-fade-in duration-300">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          <!-- Interactive Controls (Left Column) -->
+          <div class="lg:col-span-5 space-y-6 flex flex-col justify-center">
+            <div>
+              <h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 mb-2">WebAuthn Key-Pair Generator</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                Register a new hardware-backed credential, then sign authentication challenges using public-key cryptography.
+              </p>
+            </div>
+
+            <div class="space-y-3">
+              <button 
+                id="fido-btn-register"
+                class="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 transition-all shadow hover:-translate-y-0.5 cursor-pointer"
+              >
+                1. Register Passkey (Create Key-Pair)
+              </button>
+              <button 
+                id="fido-btn-auth"
+                disabled
+                class="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-slate-900 dark:text-slate-100 transition-all disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+              >
+                2. Authenticate (Sign Challenge)
+              </button>
+            </div>
+          </div>
+
+          <!-- Flow Diagram (Right Column) -->
+          <div class="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col justify-between shadow-sm min-h-[250px]">
+            <div class="flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-wider text-slate-400 mb-6">
+              <span>Local Device (Client)</span>
+              <span>Secure Connection</span>
+              <span>Relying Party (IDP)</span>
+            </div>
+
+            <!-- Visual Flow Entities -->
+            <div class="flex items-center justify-between gap-2 relative h-24">
+              <!-- Connector line -->
+              <div class="absolute top-1/2 left-[12%] right-[12%] h-0.5 bg-slate-200 dark:bg-slate-800 -translate-y-1/2 -z-0">
+                <div id="fido-line-pulse" class="h-full bg-blue-500 scale-x-0 origin-left transition-transform duration-700"></div>
+              </div>
+
+              <!-- Device Node -->
+              <div id="node-device" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center gap-1 z-10 transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600 dark:text-slate-400"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 dark:text-slate-400">TPM/Key</span>
+              </div>
+
+              <!-- Transfer bubble -->
+              <div id="node-bubble" class="absolute top-1/2 w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center shadow z-10" style="left: 12%; transform: translate(-50%, -50%) scale(0.75); opacity: 0;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              </div>
+
+              <!-- IDP Node -->
+              <div id="node-server" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center gap-1 z-10 transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600 dark:text-slate-400"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 dark:text-slate-400">IDP Server</span>
+              </div>
+            </div>
+
+            <!-- Dynamic text status bubble -->
+            <div id="fido-status-text" class="text-center text-xs font-bold text-slate-500 dark:text-slate-400 mt-6 min-h-[16px]">
+              Ready. Select 'Register Passkey' to begin.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- OAuth 2.0 Content -->
+      <div id="content-oauth" class="hidden space-y-8 animate-fade-in duration-300">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          <!-- Interactive Controls (Left Column) -->
+          <div class="lg:col-span-5 space-y-6 flex flex-col justify-center">
+            <div>
+              <h3 class="text-lg font-bold text-slate-900 dark:text-slate-50 mb-2">Auth Code Grant Exchange</h3>
+              <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                Simulate standard OpenID Connect authorization code grant. Secure an auth code and trade it for a signed JSON Web Token (JWT).
+              </p>
+            </div>
+
+            <div class="space-y-3">
+              <button 
+                id="oauth-btn-code"
+                class="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 transition-all shadow hover:-translate-y-0.5 cursor-pointer"
+              >
+                1. Request Authorization Code
+              </button>
+              <button 
+                id="oauth-btn-token"
+                disabled
+                class="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold text-slate-900 dark:text-slate-100 transition-all disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+              >
+                2. Exchange Code for JWT Access Token
+              </button>
+            </div>
+          </div>
+
+          <!-- Flow Diagram (Right Column) -->
+          <div class="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col justify-between shadow-sm min-h-[250px]">
+            <div class="flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-wider text-slate-400 mb-6">
+              <span>Client App</span>
+              <span>OAuth Scope Channels</span>
+              <span>Auth ID Server</span>
+            </div>
+
+            <!-- Visual Flow Entities -->
+            <div class="flex items-center justify-between gap-2 relative h-24">
+              <!-- Connector line -->
+              <div class="absolute top-1/2 left-[12%] right-[12%] h-0.5 bg-slate-200 dark:bg-slate-800 -translate-y-1/2 -z-0">
+                <div id="oauth-line-pulse" class="h-full bg-indigo-500 scale-x-0 origin-left transition-transform duration-700"></div>
+              </div>
+
+              <!-- Client Node -->
+              <div id="node-oauth-client" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center gap-1 z-10 transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600 dark:text-slate-400"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+                <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 dark:text-slate-400">Web App</span>
+              </div>
+
+              <!-- Transfer bubble -->
+              <div id="node-oauth-bubble" class="absolute top-1/2 w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center shadow z-10" style="left: 12%; transform: translate(-50%, -50%) scale(0.75); opacity: 0;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white"><key cx="4" cy="4" r="2"></key><path d="M21 2l-2 2m-7.61 7.61a5.5 5.05 0 1 1-7.778 7.778 5.5 5.05 0 0 1 7.778-7.778z"></path></svg>
+              </div>
+
+              <!-- Auth Server Node -->
+              <div id="node-oauth-server" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center gap-1 z-10 transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600 dark:text-slate-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 dark:text-slate-400">OAuth Server</span>
+              </div>
+            </div>
+
+            <!-- Dynamic text status bubble -->
+            <div id="oauth-status-text" class="text-center text-xs font-bold text-slate-500 dark:text-slate-400 mt-6 min-h-[16px]">
+              Ready. Select 'Request Authorization Code' to begin.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Real-Time Sandbox Terminal Console Logs -->
+      <div class="mt-8 bg-slate-950 border border-slate-900 rounded-2xl p-5 font-mono shadow-inner">
+        <div class="flex items-center justify-between mb-4 border-b border-slate-900 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-red-500"></span>
+            <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+            <span class="w-3 h-3 rounded-full bg-green-500"></span>
+            <span class="text-xs text-slate-500 font-bold ml-2">Console Outputs</span>
+          </div>
+          <button 
+            id="console-clear"
+            class="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-red-400 transition-colors"
+          >
+            Clear Log
+          </button>
+        </div>
+
+        <div id="console-stream" class="h-40 overflow-y-auto space-y-2 text-xs leading-relaxed text-slate-300 font-mono scrollbar-thin">
+          <p class="text-slate-500">[SYSTEM] Cryptographic sandbox initialized. WebAuthn and OIDC services are active.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<script is:inline>
+  const setupSecuritySimulators = () => {
+    // Dom Nodes (Tabs)
+    const tabFido = document.getElementById('tab-fido2');
+    const tabOauth = document.getElementById('tab-oauth');
+    const fidoContent = document.getElementById('content-fido2');
+    const oauthContent = document.getElementById('content-oauth');
+
+    // Tab switcher logic
+    if (tabFido && tabOauth && fidoContent && oauthContent) {
+      tabFido.addEventListener('click', () => {
+        tabFido.classList.add('border-b-2', 'border-blue-500', 'text-blue-600', 'dark:text-blue-400');
+        tabFido.classList.remove('border-transparent', 'text-slate-500');
+        tabOauth.classList.remove('border-b-2', 'border-blue-500', 'text-blue-600', 'dark:text-blue-400');
+        tabOauth.classList.add('border-transparent', 'text-slate-500');
+        fidoContent.classList.remove('hidden');
+        oauthContent.classList.add('hidden');
+        addLog('SYSTEM', 'Switched context to WebAuthn / FIDO2 Passkey testing module.');
+      });
+
+      tabOauth.addEventListener('click', () => {
+        tabOauth.classList.add('border-b-2', 'border-blue-500', 'text-blue-600', 'dark:text-blue-400');
+        tabOauth.classList.remove('border-transparent', 'text-slate-500');
+        tabFido.classList.remove('border-b-2', 'border-blue-500', 'text-blue-600', 'dark:text-blue-400');
+        tabFido.classList.add('border-transparent', 'text-slate-500');
+        oauthContent.classList.remove('hidden');
+        fidoContent.classList.add('hidden');
+        addLog('SYSTEM', 'Switched context to OAuth 2.0 Auth Code Grant simulation.');
+      });
+    }
+
+    // Terminal log engine
+    const consoleStream = document.getElementById('console-stream');
+    const clearBtn = document.getElementById('console-clear');
+
+    const addLog = (level, text) => {
+      if (!consoleStream) return;
+      const p = document.createElement('p');
+      let colorClass = 'text-slate-300';
+      if (level === 'SYSTEM') colorClass = 'text-slate-500';
+      if (level === 'POST' || level === 'GET') colorClass = 'text-indigo-400';
+      if (level === 'SUCCESS') colorClass = 'text-emerald-500';
+      if (level === 'CRYPTO') colorClass = 'text-blue-400';
+
+      p.innerHTML = `<span class="${colorClass} font-bold mr-2">[${level}]</span><span class="font-mono">${text}</span>`;
+      consoleStream.appendChild(p);
+      consoleStream.scrollTop = consoleStream.scrollHeight;
+    };
+
+    if (clearBtn && consoleStream) {
+      clearBtn.addEventListener('click', () => {
+        consoleStream.innerHTML = `<p class="text-slate-500">[SYSTEM] Terminal logs cleared. Sandbox is clean.</p>`;
+      });
+    }
+
+    // 1. FIDO2 Simulator Nodes
+    const fidoRegBtn = document.getElementById('fido-btn-register');
+    const fidoAuthBtn = document.getElementById('fido-btn-auth');
+    const fidoLine = document.getElementById('fido-line-pulse');
+    const fidoBubble = document.getElementById('node-bubble');
+    const fidoStatus = document.getElementById('fido-status-text');
+    const nodeDevice = document.getElementById('node-device');
+    const nodeServer = document.getElementById('node-server');
+
+    let registeredPublicKey = null;
+
+    if (fReg = fidoRegBtn) {
+      fReg.addEventListener('click', () => {
+        fReg.disabled = true;
+        fidoStatus.textContent = 'Generating cryptographic key pair on Device Secure Enclave...';
+        nodeDevice.classList.add('ring-4', 'ring-blue-500/40', 'scale-105');
+        addLog('CRYPTO', 'Invoked navigator.credentials.create()');
+        addLog('CRYPTO', 'TPM / Secure Enclave generating ECC P-256 private-public key pair...');
+
+        setTimeout(() => {
+          nodeDevice.classList.remove('ring-4', 'ring-blue-500/40', 'scale-105');
+          fidoStatus.textContent = 'Sending public key and credential ID to server...';
+          fidoLine.classList.add('scale-x-100');
+          
+          // Animate bubble transmission to server using responsive percentage math
+          fidoBubble.style.transition = 'left 1000ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1000ms ease, transform 1000ms ease';
+          fidoBubble.style.left = '88%';
+          fidoBubble.style.opacity = '1';
+          fidoBubble.style.transform = 'translate(-50%, -50%) scale(1)';
+          
+          addLog('POST', 'Transmitting CredentialPublicKey: "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE..."');
+
+          setTimeout(() => {
+            fidoBubble.style.opacity = '0';
+            fidoBubble.style.transform = 'translate(-50%, -50%) scale(0.75)';
+            
+            nodeServer.classList.add('ring-4', 'ring-emerald-500/40', 'scale-105');
+            fidoStatus.textContent = 'Passkey Registered Successfully!';
+            registeredPublicKey = "ecc_key_assertion_sig_" + Math.random().toString(36).substring(7);
+            
+            addLog('SUCCESS', 'Server registered Public Key binding to domain: "mayankrajjaiswal.com"');
+            addLog('SUCCESS', 'Credential registered in Relying Party database. FIDO2 Passkey active.');
+
+            fidoAuthBtn.disabled = false;
+            fReg.disabled = false;
+            fReg.textContent = 'Re-Register Passkey';
+
+            setTimeout(() => {
+              nodeServer.classList.remove('ring-4', 'ring-emerald-500/40', 'scale-105');
+              fidoLine.classList.remove('scale-x-100');
+              
+              // Reset bubble position smoothly after fading out
+              setTimeout(() => {
+                fidoBubble.style.transition = 'none';
+                fidoBubble.style.left = '12%';
+              }, 500);
+            }, 1000);
+          }, 1000);
+
+        }, 1500);
+      });
+    }
+
+    if (fAuth = fidoAuthBtn) {
+      fAuth.addEventListener('click', () => {
+        if (!registeredPublicKey) return;
+        fAuth.disabled = true;
+        fidoStatus.textContent = 'Requesting challenge from server...';
+        nodeServer.classList.add('ring-4', 'ring-indigo-500/40', 'scale-105');
+        
+        // Reverse pulse animation (Server sending challenge)
+        fidoLine.classList.add('scale-x-100');
+        fidoBubble.innerHTML = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
+        
+        // Position bubble initially at Server (88%) and animate to Device (12%)
+        fidoBubble.style.transition = 'none';
+        fidoBubble.style.left = '88%';
+        fidoBubble.style.opacity = '0';
+        fidoBubble.style.transform = 'translate(-50%, -50%) scale(0.75)';
+
+        setTimeout(() => {
+          fidoBubble.style.transition = 'left 1000ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1000ms ease, transform 1000ms ease';
+          fidoBubble.style.left = '12%';
+          fidoBubble.style.opacity = '1';
+          fidoBubble.style.transform = 'translate(-50%, -50%) scale(1)';
+          addLog('GET', 'Server issued challenge bytes: "dGhpcy1pcy1hLWNyeXB0by1jaGFsbGVuZ2U..."');
+        }, 50);
+
+        setTimeout(() => {
+          nodeServer.classList.remove('ring-4', 'ring-indigo-500/40', 'scale-105');
+          fidoBubble.style.opacity = '0';
+          fidoBubble.style.transform = 'translate(-50%, -50%) scale(0.75)';
+          
+          nodeDevice.classList.add('ring-4', 'ring-blue-500/40', 'scale-105');
+          fidoStatus.textContent = 'User Presence & Verification (Simulating biometric tap)...';
+          addLog('CRYPTO', 'TPM Prompting: "Verify Identity using Biometrics"');
+
+          setTimeout(() => {
+            fidoStatus.textContent = 'Device signing challenge with Private Key...';
+            addLog('CRYPTO', 'Generated assertion signature using Hardware-Backed Private Key.');
+            
+            // Send signed assertion bubble back to server
+            fidoBubble.innerHTML = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+            fidoBubble.style.transition = 'none';
+            fidoBubble.style.left = '12%';
+            fidoBubble.style.opacity = '0';
+            fidoBubble.style.transform = 'translate(-50%, -50%) scale(0.75)';
+
+            setTimeout(() => {
+              fidoBubble.style.transition = 'left 1000ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1000ms ease, transform 1000ms ease';
+              fidoBubble.style.left = '88%';
+              fidoBubble.style.opacity = '1';
+              fidoBubble.style.transform = 'translate(-50%, -50%) scale(1)';
+              addLog('POST', 'Transmitting AssertionSignature: "MEQCIDf1rFz9XgGzB9K0..."');
+
+              setTimeout(() => {
+                fidoBubble.style.opacity = '0';
+                fidoBubble.style.transform = 'translate(-50%, -50%) scale(0.75)';
+                
+                nodeServer.classList.add('ring-4', 'ring-emerald-500/40', 'scale-105');
+                fidoStatus.textContent = 'Authenticated Successfully with FIDO2 Passkey!';
+                
+                addLog('SUCCESS', 'Server verified assertion against registered public key.');
+                addLog('SUCCESS', 'Cryptographic verification verified. Authentication Token issued.');
+
+                setTimeout(() => {
+                  nodeServer.classList.remove('ring-4', 'ring-emerald-500/40', 'scale-105');
+                  nodeDevice.classList.remove('ring-4', 'ring-blue-500/40', 'scale-105');
+                  fidoLine.classList.remove('scale-x-100');
+                  fAuth.disabled = false;
+                  
+                  // Reset bubble elements and icons
+                  setTimeout(() => {
+                    fidoBubble.style.transition = 'none';
+                    fidoBubble.style.left = '12%';
+                    fidoBubble.innerHTML = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`;
+                  }, 500);
+                }, 1000);
+
+              }, 1000);
+            }, 50);
+          }, 1500);
+        }, 1000);
+      });
+    }
+
+    // 2. OAuth 2.0 Simulator Nodes
+    const oAuthCodeBtn = document.getElementById('oauth-btn-code');
+    const oAuthTokenBtn = document.getElementById('oauth-btn-token');
+    const oAuthLine = document.getElementById('oauth-line-pulse');
+    const oAuthBubble = document.getElementById('node-oauth-bubble');
+    const oAuthStatus = document.getElementById('oauth-status-text');
+    const oNodeClient = document.getElementById('node-oauth-client');
+    const oNodeServer = document.getElementById('node-oauth-server');
+
+    let receivedAuthCode = null;
+
+    if (oCode = oAuthCodeBtn) {
+      oCode.addEventListener('click', () => {
+        oCode.disabled = true;
+        oAuthStatus.textContent = 'Redirecting user to authorize scope request...';
+        oNodeClient.classList.add('ring-4', 'ring-indigo-500/40', 'scale-105');
+        addLog('GET', 'Authorize requested: "/oauth/authorize?client_id=client_001&scope=openid+profile+security&response_type=code"');
+
+        setTimeout(() => {
+          oNodeClient.classList.remove('ring-4', 'ring-indigo-500/40', 'scale-105');
+          oNodeServer.classList.add('ring-4', 'ring-blue-500/40', 'scale-105');
+          oAuthStatus.textContent = 'Issuing authorization code redirect...';
+          
+          oAuthLine.classList.add('scale-x-100');
+          oAuthBubble.style.transition = 'none';
+          oAuthBubble.style.left = '88%';
+          oAuthBubble.style.opacity = '0';
+          oAuthBubble.style.transform = 'translate(-50%, -50%) scale(0.75)';
+
+          setTimeout(() => {
+            oAuthBubble.style.transition = 'left 1000ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1000ms ease, transform 1000ms ease';
+            oAuthBubble.style.left = '12%';
+            oAuthBubble.style.opacity = '1';
+            oAuthBubble.style.transform = 'translate(-50%, -50%) scale(1)';
+            addLog('GET', 'Server granted authorization code scope request.');
+          }, 50);
+
+          setTimeout(() => {
+            oAuthBubble.style.opacity = '0';
+            oAuthBubble.style.transform = 'translate(-50%, -50%) scale(0.75)';
+            
+            oNodeServer.classList.remove('ring-4', 'ring-blue-500/40', 'scale-105');
+            oNodeClient.classList.add('ring-4', 'ring-emerald-500/40', 'scale-105');
+            
+            receivedAuthCode = "auth_code_jwt_val_" + Math.random().toString(36).substring(7);
+            oAuthStatus.textContent = 'Received Authorization Code!';
+            
+            addLog('SUCCESS', `Client received Auth Code: "code=${receivedAuthCode}" via redirect query parameters.`);
+
+            oAuthTokenBtn.disabled = false;
+            oCode.disabled = false;
+            oCode.textContent = 'Request New Auth Code';
+
+            setTimeout(() => {
+              oNodeClient.classList.remove('ring-4', 'ring-emerald-500/40', 'scale-105');
+              oAuthLine.classList.remove('scale-x-100');
+              
+              setTimeout(() => {
+                oAuthBubble.style.transition = 'none';
+                oAuthBubble.style.left = '12%';
+              }, 500);
+            }, 1000);
+          }, 1000);
+
+        }, 1500);
+      });
+    }
+
+    if (oTok = oAuthTokenBtn) {
+      oTok.addEventListener('click', () => {
+        if (!receivedAuthCode) return;
+        oTok.disabled = true;
+        oAuthStatus.textContent = 'Exchanging auth code & credentials for access token...';
+        oNodeClient.classList.add('ring-4', 'ring-indigo-500/40', 'scale-105');
+        
+        oAuthLine.classList.add('scale-x-100');
+        oAuthBubble.style.transition = 'none';
+        oAuthBubble.style.left = '12%';
+        oAuthBubble.style.opacity = '0';
+        oAuthBubble.style.transform = 'translate(-50%, -50%) scale(0.75)';
+
+        setTimeout(() => {
+          oAuthBubble.style.transition = 'left 1000ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1000ms ease, transform 1000ms ease';
+          oAuthBubble.style.left = '88%';
+          oAuthBubble.style.opacity = '1';
+          oAuthBubble.style.transform = 'translate(-50%, -50%) scale(1)';
+          addLog('POST', `Client requested token: "/oauth/token" with code="${receivedAuthCode}" and client_secret="*****"`);
+        }, 50);
+
+        setTimeout(() => {
+          oNodeClient.classList.remove('ring-4', 'ring-indigo-500/40', 'scale-105');
+          oAuthBubble.style.opacity = '0';
+          oAuthBubble.style.transform = 'translate(-50%, -50%) scale(0.75)';
+          
+          oNodeServer.classList.add('ring-4', 'ring-blue-500/40', 'scale-105');
+          oAuthStatus.textContent = 'Generating cryptographically signed JWT...';
+          addLog('CRYPTO', 'Server verifying client_secret and authorization code validity...');
+
+          setTimeout(() => {
+            oAuthStatus.textContent = 'Returning cryptographically signed JWT Token...';
+            addLog('CRYPTO', 'Server signing JWT using RSA-256 private key (with active JWKS keys).');
+            
+            // Server returns signed token bubble
+            oAuthBubble.innerHTML = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+            oAuthBubble.style.transition = 'none';
+            oAuthBubble.style.left = '88%';
+            oAuthBubble.style.opacity = '0';
+            oAuthBubble.style.transform = 'translate(-50%, -50%) scale(0.75)';
+
+            setTimeout(() => {
+              oAuthBubble.style.transition = 'left 1000ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1000ms ease, transform 1000ms ease';
+              oAuthBubble.style.left = '12%';
+              oAuthBubble.style.opacity = '1';
+              oAuthBubble.style.transform = 'translate(-50%, -50%) scale(1)';
+              addLog('SUCCESS', 'Server responded: access_token: "eyJhbGciOiJSUzI1NiIsImtpZCI6..."');
+
+              setTimeout(() => {
+                oAuthBubble.style.opacity = '0';
+                oAuthBubble.style.transform = 'translate(-50%, -50%) scale(0.75)';
+                
+                oNodeServer.classList.remove('ring-4', 'ring-blue-500/40', 'scale-105');
+                oNodeClient.classList.add('ring-4', 'ring-emerald-500/40', 'scale-105');
+                oAuthStatus.textContent = 'Access Token generated and registered in Browser Session!';
+                
+                addLog('SUCCESS', 'OIDC Token parsing: sub="mayankrajjaiswal", roles=["SecurityArchitect"], exp=3600');
+                addLog('SUCCESS', 'OIDC flow completed. Token registered inside secure client context.');
+
+                setTimeout(() => {
+                  oNodeClient.classList.remove('ring-4', 'ring-emerald-500/40', 'scale-105');
+                  oAuthLine.classList.remove('scale-x-100');
+                  oTok.disabled = true;
+                  receivedAuthCode = null;
+                  
+                  setTimeout(() => {
+                    oAuthBubble.style.transition = 'none';
+                    oAuthBubble.style.left = '12%';
+                    oAuthBubble.innerHTML = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white"><key cx="4" cy="4" r="2"></key><path d="M21 2l-2 2m-7.61 7.61a5.5 5.05 0 1 1-7.778 7.778 5.5 5.05 0 0 1 7.778-7.778z"></path></svg>`;
+                  }, 500);
+                }, 1000);
+
+              }, 1000);
+            }, 50);
+          }, 1500);
+        }, 1000);
+      });
+    }
+  };
+
+  // Run on load
+  setupSecuritySimulators();
+  document.addEventListener('astro:after-swap', setupSecuritySimulators);
+</script>

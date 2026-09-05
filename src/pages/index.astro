@@ -6,6 +6,8 @@ import About from '../components/sections/About.astro';
 import Experience from '../components/sections/Experience.astro';
 import Projects from '../components/sections/Projects.astro';
 import Research from '../components/sections/Research.astro';
+import SecuritySimulator from '../components/sections/SecuritySimulator.astro';
+import RecentWriting from '../components/sections/RecentWriting.astro';
 import Speaking from '../components/sections/Speaking.astro';
 import Certifications from '../components/sections/Certifications.astro';
 import Timeline from '../components/sections/Timeline.astro';
@@ -19,12 +21,14 @@ import Footer from '../components/layout/Footer.astro';
   preloadImage="/images/mayank-portrait.jpg"
 >
   <Header />
-  <main class="flex-grow pt-16">
+  <main id="main-content" tabindex="-1" class="flex-grow pt-16 outline-none">
     <Hero />
     <About />
     <Experience />
     <Projects />
     <Research />
+    <SecuritySimulator />
+    <RecentWriting />
     <Speaking />
     <Certifications />
     <Timeline />

@@ -1,0 +1,7 @@
+# RFC 9116 Security Disclosure Policy for MayankRajJaiswal.com
+Contact: mailto:info@mjaiswal.com
+Encryption: https://mayankrajjaiswal.com/mayank_pgp.asc
+Preferred-Languages: en
+Hiring: https://mayankrajjaiswal.com/#contact
+Canonical: https://mayankrajjaiswal.com/.well-known/security.txt
+Policy: https://mayankrajjaiswal.com/#contact

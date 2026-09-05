@@ -12,11 +12,12 @@ interface Props {
 const { title, description, ogType = 'website', pubDate, preloadImage } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const jsonLd = {
+const personSchema = {
   "@context": "https://schema.org/",
   "@type": "Person",
+  "@id": "https://mayankrajjaiswal.com/#person",
   "name": "Mayank Raj Jaiswal",
-  "url": Astro.site?.toString(),
+  "url": "https://mayankrajjaiswal.com",
   "image": "https://mayankrajjaiswal.com/images/mayank-portrait.jpg",
   "jobTitle": "Enterprise Security Architect",
   "description": "Enterprise Security Architect specializing in Identity & Access Management, Cybersecurity, Artificial Intelligence, Cloud Security, and Enterprise Software Architecture.",
@@ -32,6 +33,36 @@ const jsonLd = {
     {
       "@type": "EducationalOrganization",
       "name": "IIT Kanpur"
+    }
+  ],
+  "educationalCredentialAwarded": [
+    {
+      "@type": "EducationalOccupationalCredential",
+      "name": "M.Tech – Software Engineering",
+      "recognizedBy": {
+        "@type": "EducationalOrganization",
+        "name": "BITS Pilani"
+      }
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "name": "B.Tech – Computer Science & Engineering",
+      "recognizedBy": {
+        "@type": "EducationalOrganization",
+        "name": "IIT Kanpur"
+      }
+    }
+  ],
+  "hasCredential": [
+    {
+      "@type": "EducationalOccupationalCredential",
+      "name": "AWS Certified Solutions Architect",
+      "credentialCategory": "Professional Certification"
+    },
+    {
+      "@type": "EducationalOccupationalCredential",
+      "name": "Certified Payment Cryptography Specialist",
+      "credentialCategory": "Professional Certification"
     }
   ],
   "knowsAbout": [
@@ -50,6 +81,13 @@ const jsonLd = {
     "https://linkedin.com/in/mayankrajjaiswal"
   ]
 };
+
+const jsonLd = ogType === 'website' ? {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  "mainEntity": personSchema,
+  "description": "Professional Profile of Mayank Raj Jaiswal, Enterprise Security Architect."
+} : personSchema;
 
 const articleJsonLd = ogType === 'article' ? {
   "@context": "https://schema.org",
@@ -91,6 +129,10 @@ const articleJsonLd = ogType === 'article' ? {
     <link rel="alternate" type="application/rss+xml" title="Writing & Insights | Mayank Raj Jaiswal" href="/rss.xml" />
     {preloadImage && <link rel="preload" as="image" href={preloadImage} />}
 
+    <!-- Search Engine Verifications (Webmaster Tools) -->
+    <meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_KEY_HERE" />
+    <meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_KEY_HERE" />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalURL} />
@@ -113,7 +155,7 @@ const articleJsonLd = ogType === 'article' ? {
     <!-- Preload fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
     <!-- Blocking Script to prevent Theme Flashing -->
     <script is:inline>
@@ -136,7 +178,89 @@ const articleJsonLd = ogType === 'article' ? {
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     {articleJsonLd && <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />}
   </head>
-  <body class="min-h-screen flex flex-col">
+  <body class="min-h-[100dvh] flex flex-col">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:font-bold focus:rounded-xl focus:shadow-lg focus:outline-none">
+      Skip to content
+    </a>
     <slot />
+
+    <!-- Back to Top Button -->
+    <button
+      id="back-to-top"
+      class="fixed bottom-6 right-6 z-40 p-3 rounded-full border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-500/50 dark:hover:border-blue-500/30 shadow-lg hover:shadow-xl backdrop-blur-md transition-all duration-300 translate-y-4 opacity-0 pointer-events-none"
+      aria-label="Back to Top"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="19" x2="12" y2="5"></line>
+        <polyline points="5 12 12 5 19 12"></polyline>
+      </svg>
+    </button>
+
+    <script is:inline>
+      const setupBackToTop = () => {
+        const btn = document.getElementById('back-to-top');
+        if (!btn) return;
+
+        const handleScroll = () => {
+          if (window.scrollY > 400) {
+            btn.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+            btn.classList.add('opacity-100', 'translate-y-0');
+          } else {
+            btn.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+            btn.classList.remove('opacity-100', 'translate-y-0');
+          }
+        };
+
+        window.removeEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll);
+
+        btn.addEventListener('click', () => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+        });
+      };
+
+      setupBackToTop();
+      document.addEventListener('astro:after-swap', setupBackToTop);
+    </script>
+
+    <!-- PWA Service Worker Registration -->
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').then(registration => {
+            console.log('ServiceWorker registered successfully with scope: ', registration.scope);
+          }).catch(err => {
+            console.warn('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+    </script>
+
+    <!-- Card Spotlight Glow Listener -->
+    <script is:inline>
+      const setupSpotlightGlow = () => {
+        const glowCards = document.querySelectorAll('[data-glow]');
+        
+        glowCards.forEach(card => {
+          const handleMouseMove = (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+          };
+          
+          card.removeEventListener('mousemove', handleMouseMove);
+          card.addEventListener('mousemove', handleMouseMove);
+        });
+      };
+
+      setupSpotlightGlow();
+      document.addEventListener('astro:after-swap', setupSpotlightGlow);
+    </script>
   </body>
 </html>

@@ -7,6 +7,16 @@ import Footer from '../../components/layout/Footer.astro';
 const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+
+// Calculate dynamic reading times on the server
+const postsWithReadingTime = posts.map(post => {
+  const wordCount = post.body.split(/\s+/).filter(Boolean).length;
+  const readingTime = Math.ceil(wordCount / 200);
+  return { ...post, readingTime };
+});
+
+// Extract all unique tags
+const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort();
 ---
 
 <Layout 
@@ -14,33 +24,80 @@ const posts = (await getCollection('blog')).sort(
   description="Articles, thoughts, and research on Enterprise Security, IAM, Cloud Security, and AI."
 >
   <Header />
-  <main class="flex-grow pt-32 pb-24 bg-white dark:bg-slate-950">
+  <main id="main-content" tabindex="-1" class="flex-grow pt-32 pb-24 bg-white dark:bg-slate-950 outline-none">
     <div class="max-w-4xl mx-auto px-6">
       
-      <div class="max-w-2xl mb-16">
-        <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-50 mb-4">
-          Writing & Insights
-        </h1>
+      <!-- Page Header -->
+      <div class="max-w-2xl mb-12">
+        <div class="flex items-center gap-4 mb-4">
+          <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
+            Writing & Insights
+          </h1>
+          <a 
+            href="/rss.xml" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="p-2 text-slate-500 hover:text-orange-500 dark:text-slate-400 dark:hover:text-orange-400 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors" 
+            aria-label="RSS Feed"
+            title="Subscribe to RSS Feed"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 11a9 9 0 0 1 9 9"></path>
+              <path d="M4 4a16 16 0 0 1 16 16"></path>
+              <circle cx="5" cy="19" r="1"></circle>
+            </svg>
+          </a>
+        </div>
         <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
           Sharing deep technical analysis, industry trends, and research at the intersection of cybersecurity, artificial intelligence, and enterprise identity architecture.
         </p>
       </div>
 
-      <div class="space-y-12">
-        {posts.map(post => (
-          <article class="group relative flex flex-col items-start">
+      <!-- Progressive Tag Filter Bar -->
+      <div class="flex flex-wrap gap-2 mb-12 border-b border-slate-100 dark:border-slate-800/80 pb-6">
+        <button 
+          data-filter="all"
+          class="filter-tag-btn px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-xl bg-blue-600 text-white shadow-sm border border-blue-600 transition-all cursor-pointer"
+        >
+          All
+        </button>
+        {allTags.map(tag => (
+          <button 
+            data-filter={tag.toLowerCase()}
+            class="filter-tag-btn px-4 py-2 text-xs font-bold uppercase tracking-widest rounded-xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-900/40 dark:hover:bg-slate-900/80 text-slate-600 dark:text-slate-400 border border-slate-200/60 dark:border-slate-800/60 transition-all cursor-pointer"
+          >
+            {tag}
+          </button>
+        ))}
+      </div>
+
+      <!-- Articles Feed -->
+      <div class="space-y-16">
+        {postsWithReadingTime.map(post => (
+          <article 
+            data-tags={post.data.tags.map(t => t.toLowerCase()).join(',')}
+            class="group relative flex flex-col items-start"
+          >
             <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
               <a href={`/blog/${post.slug}`}>
                 <span class="absolute -inset-y-2.5 -inset-x-4 md:-inset-y-4 md:-inset-x-6 z-0 scale-95 bg-slate-50 dark:bg-slate-900/50 opacity-0 transition group-hover:scale-100 group-hover:opacity-100 rounded-2xl" />
                 <span class="relative z-10">{post.data.title}</span>
               </a>
             </h2>
-            <p class="relative z-10 order-first mb-3 flex items-center text-sm font-medium text-slate-500 dark:text-slate-400">
-              {new Date(post.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+            
+            <p class="relative z-10 order-first mb-3 flex flex-wrap items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+              <span>{new Date(post.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span class="text-slate-300 dark:text-slate-800">&bull;</span>
+              <span class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline shrink-0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                {post.readingTime} min read
+              </span>
             </p>
+
             <p class="relative z-10 mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
               {post.data.description}
             </p>
+            
             <div class="relative z-10 mt-4 flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400">
               Read article
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 transition-transform group-hover:translate-x-1"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
@@ -53,3 +110,47 @@ const posts = (await getCollection('blog')).sort(
   </main>
   <Footer />
 </Layout>
+
+<script is:inline>
+  const setupTagFilters = () => {
+    const filterBtns = document.querySelectorAll('.filter-tag-btn');
+    const articles = document.querySelectorAll('article[data-tags]');
+
+    if (filterBtns.length === 0 || articles.length === 0) return;
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const selectedTag = btn.getAttribute('data-filter');
+
+        // Toggle active button styling classes
+        filterBtns.forEach(b => {
+          b.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
+          b.classList.add('bg-slate-50', 'dark:bg-slate-900/40', 'text-slate-600', 'dark:text-slate-400', 'border-slate-200/60', 'dark:border-slate-800/60');
+          b.classList.add('hover:bg-slate-100', 'dark:hover:bg-slate-900/80');
+        });
+
+        btn.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
+        btn.classList.remove('bg-slate-50', 'dark:bg-slate-900/40', 'text-slate-600', 'dark:text-slate-400', 'border-slate-200/60', 'dark:border-slate-800/60', 'hover:bg-slate-100', 'dark:hover:bg-slate-900/80');
+
+        // Filter articles visually with a nice fade transition
+        articles.forEach(article => {
+          const tags = article.getAttribute('data-tags').split(',');
+          if (selectedTag === 'all' || tags.includes(selectedTag)) {
+            article.classList.remove('hidden');
+            // Force reflow and add opacity animation
+            article.style.opacity = '0';
+            setTimeout(() => {
+              article.style.transition = 'opacity 300ms ease';
+              article.style.opacity = '1';
+            }, 10);
+          } else {
+            article.classList.add('hidden');
+          }
+        });
+      });
+    });
+  };
+
+  setupTagFilters();
+  document.addEventListener('astro:after-swap', setupTagFilters);
+</script>

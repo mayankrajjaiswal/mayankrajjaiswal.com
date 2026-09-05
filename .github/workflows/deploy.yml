@@ -21,6 +21,9 @@ jobs:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
       
+      - name: DevSecOps Dependency Audit
+        run: npm audit --audit-level=high
+      
       - name: Install, build, and upload your site
         uses: withastro/action@v2
         with:

@@ -129,6 +129,10 @@ const articleJsonLd = ogType === 'article' ? {
     <link rel="alternate" type="application/rss+xml" title="Writing & Insights | Mayank Raj Jaiswal" href="/rss.xml" />
     {preloadImage && <link rel="preload" as="image" href={preloadImage} />}
 
+    <!-- Search Engine Verifications (Webmaster Tools) -->
+    <meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_KEY_HERE" />
+    <meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_KEY_HERE" />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalURL} />

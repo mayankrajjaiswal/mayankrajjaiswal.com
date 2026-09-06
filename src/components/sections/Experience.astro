@@ -22,8 +22,8 @@ import { experiences } from '../../data/experience';
           <!-- Timeline Marker -->
           <div class="absolute -left-3.5 md:-left-4 top-1 w-7 h-7 rounded-full bg-white dark:bg-slate-950 border-4 border-blue-500 flex items-center justify-center"></div>
           
-          <div class="flex flex-col gap-2 mb-6">
-            <h3 class="text-2xl font-bold text-slate-900 dark:text-slate-50">{exp.company}</h3>
+          <div class="flex flex-col gap-2 mb-6 font-sans">
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-slate-50 leading-tight">{exp.company}</h3>
             <div class="flex flex-wrap items-center gap-4 text-sm font-semibold">
               <span class="text-blue-600 dark:text-blue-400">{exp.role}</span>
               <span class="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700"></span>
@@ -33,36 +33,58 @@ import { experiences } from '../../data/experience';
 
           <!-- Cards Layout -->
           <div data-glow class="bg-gradient-to-br from-white to-blue-50/30 dark:from-slate-900 dark:to-slate-950/40 rounded-3xl p-6 md:p-8 border border-slate-200/80 dark:border-slate-800/80 shadow-md hover:shadow-lg transition-all duration-300">
-            <p class="text-slate-700 dark:text-slate-300 text-base leading-relaxed mb-8 border-b border-slate-100 dark:border-slate-800/80 pb-6 font-medium">
-              {exp.overview}
-            </p>
+            <p class="text-slate-700 dark:text-slate-300 text-base leading-relaxed mb-8 border-b border-slate-100 dark:border-slate-800/80 pb-6 font-medium font-sans" set:html={exp.overview}></p>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <!-- Left Column: Impact & Architecture -->
+              <!-- Left Column: Impact & Architecture (Progressive Disclosure) -->
               <div>
                 <h4 class="text-xs font-bold text-slate-900 dark:text-slate-50 uppercase tracking-widest mb-4 flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                   Architecture & Impact
                 </h4>
-                <ul class="space-y-3.5">
-                  {exp.impact.slice(0, 5).map(item => (
-                    <li class="flex items-start gap-3 text-sm text-slate-600 dark:text-slate-300">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-1 text-blue-500 shrink-0"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                      <span class="leading-relaxed">{item}</span>
+                
+                <!-- Primary list (Always visible) -->
+                <ul class="space-y-3.5 font-sans">
+                  {exp.impact.slice(0, 2).map(item => (
+                    <li class="flex items-start gap-3.5 text-sm text-slate-600 dark:text-slate-300">
+                      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-1 text-blue-500 shrink-0"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      <span class="leading-relaxed" set:html={item}></span>
                     </li>
                   ))}
                 </ul>
+
+                <!-- Collapsible list (Hidden by default) -->
+                {exp.impact.length > 2 && (
+                  <div id={`details-${exp.id}`} class="hidden mt-3.5 space-y-3.5 border-t border-slate-100 dark:border-slate-800/40 pt-3.5 animate-fade-in duration-300">
+                    <ul class="space-y-3.5 font-sans">
+                      {exp.impact.slice(2).map(item => (
+                        <li class="flex items-start gap-3.5 text-sm text-slate-600 dark:text-slate-300">
+                          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-1 text-blue-500 shrink-0"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                          <span class="leading-relaxed" set:html={item}></span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <button 
+                    data-toggle-btn={`details-${exp.id}`}
+                    class="mt-5 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-350 transition-colors cursor-pointer group/btn"
+                  >
+                    <span>Show Technical Bulletins ({exp.impact.length - 2} more)</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-300 group-hover/btn:translate-y-0.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                  </button>
+                )}
               </div>
 
               <!-- Right Column: Technology and Focus Tags -->
               <div>
                 <h4 class="text-xs font-bold text-slate-900 dark:text-slate-50 uppercase tracking-widest mb-4 flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                   Enterprise Competencies
                 </h4>
                 <div class="flex flex-wrap gap-2">
                   {exp.contributions.map(tech => (
-                    <span class="px-3 py-1.5 text-xs font-semibold bg-slate-50 dark:bg-slate-950/60 text-slate-700 dark:text-slate-300 rounded-lg border border-slate-200/80 dark:border-slate-800/80 hover:border-blue-500/50 dark:hover:border-blue-500/30 transition-colors">
+                    <span class="px-3 py-1.5 text-xs font-semibold bg-slate-50 dark:bg-slate-950/60 text-slate-700 dark:text-slate-300 rounded-lg border border-slate-200/80 dark:border-slate-800/80 hover:border-blue-500/50 dark:hover:border-blue-500/30 transition-colors font-mono">
                       {tech}
                     </span>
                   ))}
@@ -71,7 +93,7 @@ import { experiences } from '../../data/experience';
             </div>
             
             {exp.products && (
-              <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center gap-2">
+              <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800/80 flex flex-wrap items-center gap-2 font-sans">
                 <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mr-2">Major Products Delivered:</span>
                 {exp.products.map(prod => (
                   <span class="px-2.5 py-1 text-xs font-bold bg-blue-50 dark:bg-blue-900/10 text-blue-700 dark:text-blue-400 rounded-md border border-blue-100 dark:border-blue-900/30">
@@ -87,3 +109,40 @@ import { experiences } from '../../data/experience';
 
   </div>
 </section>
+
+<script is:inline>
+  const setupExperienceToggles = () => {
+    const toggleBtns = document.querySelectorAll('[data-toggle-btn]');
+    
+    toggleBtns.forEach(btn => {
+      const targetId = btn.getAttribute('data-toggle-btn');
+      const target = document.getElementById(targetId);
+      const icon = btn.querySelector('svg');
+      const textSpan = btn.querySelector('span');
+      
+      if (!target || !textSpan) return;
+      
+      const toggleAction = () => {
+        const isHidden = target.classList.toggle('hidden');
+        if (icon) {
+          icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+        
+        // Count of collapsed bullets
+        const count = target.querySelectorAll('li').length;
+        textSpan.textContent = isHidden 
+          ? `Show Technical Bulletins (${count} more)` 
+          : `Hide Technical Bulletins`;
+      };
+      
+      btn.removeEventListener('click', toggleAction);
+      btn.addEventListener('click', toggleAction);
+    });
+  };
+
+  // Run on load
+  setupExperienceToggles();
+
+  // Support SPA transitions
+  document.addEventListener('astro:after-swap', setupExperienceToggles);
+</script>

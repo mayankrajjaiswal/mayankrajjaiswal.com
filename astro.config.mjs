@@ -6,5 +6,11 @@ import mdx from '@astrojs/mdx';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://mayankrajjaiswal.com',
-  integrations: [tailwind(), sitemap(), mdx()],
+  integrations: [
+    tailwind(),
+    sitemap({
+      filter: (page) => page !== 'https://mayankrajjaiswal.com/404/' && page !== 'https://mayankrajjaiswal.com/404'
+    }),
+    mdx()
+  ],
 });

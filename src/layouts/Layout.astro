@@ -7,10 +7,47 @@ interface Props {
   ogType?: 'website' | 'article';
   pubDate?: string;
   preloadImage?: string;
+  tags?: string[];
 }
 
-const { title, description, ogType = 'website', pubDate, preloadImage } = Astro.props;
+const { title, description, ogType = 'website', pubDate, preloadImage, tags = [] } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// Helper to map blog tags to verified Wikipedia cryptographic entities (Linked Data/GEO)
+const getArticleAbout = (tagsArray: string[] = []) => {
+  const aboutList = [];
+  const tagsLower = tagsArray.map(t => t.toLowerCase());
+  
+  if (tagsLower.some(t => ['cryptography', 'pki', 'post-quantum'].includes(t))) {
+    aboutList.push({
+      "@type": "Thing",
+      "name": "Cryptography",
+      "sameAs": "https://en.wikipedia.org/wiki/Cryptography"
+    });
+  }
+  if (tagsLower.some(t => ['fido2', 'iam'].includes(t))) {
+    aboutList.push({
+      "@type": "Thing",
+      "name": "FIDO Alliance",
+      "sameAs": "https://en.wikipedia.org/wiki/FIDO_Alliance"
+    });
+  }
+  if (tagsLower.some(t => ['samsung knox', 'mobile payments'].includes(t))) {
+    aboutList.push({
+      "@type": "Thing",
+      "name": "Samsung Knox",
+      "sameAs": "https://en.wikipedia.org/wiki/Samsung_Knox"
+    });
+  }
+  if (tagsLower.some(t => ['hsm', 'cryptography'].includes(t))) {
+    aboutList.push({
+      "@type": "Thing",
+      "name": "Hardware Security Module",
+      "sameAs": "https://en.wikipedia.org/wiki/Hardware_security_module"
+    });
+  }
+  return aboutList.length > 0 ? aboutList : undefined;
+};
 
 const personSchema = {
   "@context": "https://schema.org/",
@@ -23,16 +60,28 @@ const personSchema = {
   "description": "Enterprise Security Architect specializing in Identity & Access Management, Cybersecurity, Artificial Intelligence, Cloud Security, and Enterprise Software Architecture.",
   "worksFor": {
     "@type": "Organization",
-    "name": "Thales Group"
+    "name": "Thales Group",
+    "sameAs": [
+      "https://en.wikipedia.org/wiki/Thales_Group",
+      "https://www.thalesgroup.com"
+    ]
   },
   "alumniOf": [
     {
       "@type": "EducationalOrganization",
-      "name": "BITS Pilani"
+      "name": "BITS Pilani",
+      "sameAs": [
+        "https://en.wikipedia.org/wiki/Birla_Institute_of_Technology_and_Science,_Pilani",
+        "https://www.bits-pilani.ac.in"
+      ]
     },
     {
       "@type": "EducationalOrganization",
-      "name": "IIT Kanpur"
+      "name": "IIT Kanpur",
+      "sameAs": [
+        "https://en.wikipedia.org/wiki/Indian_Institute_of_Technology_Kanpur",
+        "https://www.iitk.ac.in"
+      ]
     }
   ],
   "educationalCredentialAwarded": [
@@ -78,7 +127,8 @@ const personSchema = {
   ],
   "sameAs": [
     "https://github.com/mayankrajjaiswal",
-    "https://linkedin.com/in/mayankrajjaiswal"
+    "https://linkedin.com/in/mayankrajjaiswal",
+    "https://orcid.org/0009-0005-7281-291X"
   ]
 };
 
@@ -96,6 +146,7 @@ const articleJsonLd = ogType === 'article' ? {
   "description": description,
   "image": new URL('/og-image.jpg', Astro.site)?.toString(),
   "datePublished": pubDate,
+  "about": getArticleAbout(tags),
   "author": {
     "@type": "Person",
     "name": "Mayank Raj Jaiswal",

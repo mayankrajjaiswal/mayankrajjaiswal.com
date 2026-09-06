@@ -137,12 +137,18 @@ const articleJsonLd = ogType === 'article' ? {
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#2563eb" />
 
+    <!-- Apple Mobile Web App Polish -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="MRJ Security" />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL('/og-image.jpg', Astro.site)} />
+    <meta property="og:image:alt" content="Mayank Raj Jaiswal - Enterprise Security Architect" />
     {ogType === 'article' && <meta property="article:author" content="Mayank Raj Jaiswal" />}
     {ogType === 'article' && pubDate && <meta property="article:published_time" content={new Date(pubDate).toISOString()} />}
     <meta property="og:profile:first_name" content="Mayank" />
@@ -155,6 +161,7 @@ const articleJsonLd = ogType === 'article' ? {
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={new URL('/og-image.jpg', Astro.site)} />
+    <meta name="twitter:image:alt" content="Mayank Raj Jaiswal - Enterprise Security Architect" />
 
     <!-- Preload fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

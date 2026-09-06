@@ -23,6 +23,32 @@ const otherPosts = allPosts
   .filter(post => post.data.title !== frontmatter.title)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 2);
+
+// Generate Breadcrumb List JSON-LD for rich search engine layouts
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://mayankrajjaiswal.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Blog",
+      "item": "https://mayankrajjaiswal.com/blog"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": frontmatter.title,
+      "item": `https://mayankrajjaiswal.com/blog/${slug}`
+    }
+  ]
+};
 ---
 
 <Layout 
@@ -32,6 +58,9 @@ const otherPosts = allPosts
   pubDate={frontmatter.pubDate}
 >
   <Header />
+  
+  <!-- Breadcrumb Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
   
   <!-- Scroll Progress Indicator Bar -->
   <div id="scroll-progress" class="fixed top-16 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-indigo-600 z-50 w-0 transition-all duration-100 ease-out"></div>

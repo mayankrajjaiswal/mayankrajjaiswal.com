@@ -2,6 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================
+   Self-hosted variable fonts
+   ==========================================
+   Replaces the Google Fonts CDN, which was render-blocking on the critical path
+   and required whitelisting fonts.googleapis.com / fonts.gstatic.com in the CSP.
+
+   Variable fonts: one file per family covers the whole 100-900 weight axis, so
+   font-bold / font-semibold / font-medium / font-extrabold all resolve from a
+   single request. Latin subset only (~69KB total for both families).
+
+   The previous CDN URL also pulled Geist Mono and Inter, neither of which is
+   referenced anywhere in the codebase -- those are simply gone now.
+
+   font-display: swap renders text immediately in the fallback and swaps on load,
+   so a slow font never blocks first paint. */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('/fonts/geist-latin-var.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 800;
+  src: url('/fonts/jetbrains-mono-latin-var.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -9,6 +46,45 @@
   
   body {
     @apply bg-slate-50 text-slate-900 antialiased selection:bg-blue-200 selection:text-blue-900 dark:bg-slate-950 dark:text-slate-50 dark:selection:bg-blue-900 dark:selection:text-blue-100 transition-colors duration-300;
+  }
+}
+
+/* ==========================================
+   Long-content overflow guards
+   ==========================================
+   Code blocks and long unbroken tokens (identifiers, hashes, URLs) were pushing
+   the document wider than the viewport on narrow screens — a 320px viewport
+   scrolled horizontally on blog posts. Block code scrolls within its own box;
+   inline code and prose links wrap instead of forcing the page wide. */
+@layer base {
+  pre {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Block code must NOT wrap (it would corrupt indentation) — it scrolls. */
+  pre code {
+    white-space: pre;
+    word-break: normal;
+  }
+
+  /* Inline code has no meaningful indentation, so wrapping is safe here. */
+  :not(pre) > code {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* Bare URLs in prose are the other common overflow source. */
+  .prose a,
+  .prose p {
+    overflow-wrap: break-word;
+  }
+
+  /* Tables in long-form content scroll rather than stretch the page. */
+  .prose table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
   }
 }
 

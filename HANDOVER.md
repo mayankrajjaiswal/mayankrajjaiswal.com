@@ -10,11 +10,16 @@ Welcome to the definitive digital headquarters of **Mayank Raj Jaiswal**, Enterp
 ├── public/              # Static assets, copied verbatim into dist/
 │   ├── .well-known/
 │   │   └── security.txt # RFC 9116 vulnerability disclosure policy
-│   ├── images/          # Portrait lives here (og-image.jpg is at public/ root)
+│   ├── fonts/           # Self-hosted variable fonts (Geist, JetBrains Mono)
+│   ├── images/          # Portrait + generated AVIF/WebP/JPEG at 1x and 2x
 │   ├── resume/          # resume.pdf goes here; only the .sig is present today
 │   ├── CNAME            # Custom domain for GitHub Pages (mayankrajjaiswal.com)
 │   ├── _headers         # Netlify/Cloudflare header config — INERT on GitHub Pages
 │   ├── llms.txt         # Guidance for LLM crawlers
+│   ├── icon-192.png     # PWA icons (raster; Android needs these, not SVG)
+│   ├── icon-512.png
+│   ├── icon-512-maskable.png
+│   ├── apple-touch-icon.png
 │   ├── manifest.json    # PWA manifest
 │   ├── mayank_pgp.asc   # PGP public key for encrypted disclosure
 │   ├── robots.txt       # Crawler policies (incl. AI/GEO bot allowances)
@@ -25,6 +30,7 @@ Welcome to the definitive digital headquarters of **Mayank Raj Jaiswal**, Enterp
 │   │   └── config.ts    # Schema definition for post validation
 │   ├── data/            # Strongly-typed site data (separates UI from content)
 │   │   ├── certifications.ts
+│   │   ├── testimonials.ts  # Seeded EMPTY; section auto-hides until filled
 │   │   ├── experience.ts
 │   │   ├── projects.ts
 │   │   ├── research.ts
@@ -34,13 +40,19 @@ Welcome to the definitive digital headquarters of **Mayank Raj Jaiswal**, Enterp
 │   │   ├── layout/      # Header (nav, theme toggle, mobile drawer), Footer
 │   │   └── sections/    # Hero, About, Experience, Projects, Research, Speaking,
 │   │                    # Certifications, Timeline, SecuritySimulator,
-│   │                    # RecentWriting, Contact
+│   │                    # RecentWriting, Testimonials, Contact
 │   ├── layouts/         # Layout.astro (head, CSP meta, theme script, JSON-LD)
 │   │                    # BlogPostLayout.astro (article shell + breadcrumbs)
 │   ├── pages/           # index, 404, blog/index, blog/[slug], rss.xml.ts
 │   └── styles/          # global.css
-├── tests/
-│   ├── seo-accessibility.spec.ts   # Meta, JSON-LD, Axe, touch targets
+├── tests/               # 60 specs / 234 assertions, 3 browser engines
+│   ├── helpers.ts                  # goto(), applyTheme(), ALL_PAGES, THEMES
+│   ├── accessibility.spec.ts       # WCAG 2.2 AA, every route x both themes
+│   ├── seo-schema.spec.ts          # Meta, JSON-LD, ORCID checksum, RSS, links
+│   ├── security.spec.ts            # CSP, security.txt, form hardening
+│   ├── performance-assets.spec.ts  # Fonts, images, CLS/FCP, no 3rd parties
+│   ├── pwa-touch-targets.spec.ts   # Manifest, icons, 24px targets, overflow
+│   ├── content.spec.ts             # Placeholders, post depth, testimonials
 │   └── mobile-drawer-a11y.spec.ts  # Drawer inert state + keyboard focus return
 ├── astro.config.mjs     # Site URL, sitemap (404 excluded), MDX, Tailwind
 ├── playwright.config.ts # 3 browser projects; builds + previews before testing
@@ -88,6 +100,39 @@ All main landing page content is separated into `src/data/` for easier modificat
 Editing these files is the intended way to change site copy — the section
 components read from them, so no component markup needs touching.
 
+### **How to add a testimonial**
+1. Open `src/data/testimonials.ts`.
+2. Append an entry with the quote **verbatim** — do not paraphrase:
+   ```ts
+   {
+     id: 'jane-doe',
+     quote: 'Exactly what they wrote, unedited.',
+     author: 'Jane Doe',
+     role: 'Engineering Manager',
+     company: 'Thales Group',
+     sourceUrl: 'https://linkedin.com/in/...',   // optional but recommended
+   }
+   ```
+3. The Recommendations section appears automatically once the array is non-empty
+   (it stays hidden while empty, so a half-built section never ships).
+
+`sourceUrl` renders a "Verify on LinkedIn" link. On a site about trust, a
+verifiable recommendation is worth considerably more than an anonymous one.
+
+### **Adding or replacing the portrait**
+The hero image is served as pre-cropped AVIF/WebP/JPEG at 1x and 2x, not used
+raw. After replacing `public/images/mayank-portrait.jpg`, regenerate everything:
+
+```bash
+node scripts/generate-images.mjs
+```
+
+That rebuilds the six portrait derivatives and the four PWA icons. The crop uses
+`position: 'north'` so the head stays in frame when a landscape source is cut to
+the 4:5 display box — **look at the output before committing.** If you change the
+rendered size, update the `width`/`height` attributes in `Hero.astro` and the
+`imagesrcset` preloads in `Layout.astro` to match.
+
 ### **Editing colours safely**
 `tailwind.config.mjs` pins the `slate` palette to shades 50–950. A class naming a
 shade outside that set (`slate-750`, `blue-350`) compiles to **nothing** and fails
@@ -127,10 +172,13 @@ npx playwright install
 # Run the test pipeline
 npm run test
 ```
-The suite builds the site, serves it locally, and runs 24 checks across Chromium,
-Firefox, and WebKit: meta/OpenGraph tags, the `ProfilePage` → `Person` JSON-LD
-graph, an `axe-core` scan against `wcag2a`/`wcag2aa`/`wcag22aa`, touch-target
-sizing, and mobile-drawer keyboard behaviour.
+The suite builds the site, serves it locally, and runs **60 specs / 234
+assertions** across Chromium, Firefox, and WebKit — accessibility on every route
+in both themes, SEO and structured data, CSP, fonts and images, PWA, touch
+targets, responsive overflow, and content integrity. See the README for the
+per-file breakdown.
+
+**CI runs this as a gate.** A failing check blocks the deploy.
 
 Useful variants:
 ```bash

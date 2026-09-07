@@ -5,3 +5,7 @@ Preferred-Languages: en
 Hiring: https://mayankrajjaiswal.com/#contact
 Canonical: https://mayankrajjaiswal.com/.well-known/security.txt
 Policy: https://mayankrajjaiswal.com/#contact
+# Expires is the only field RFC 9116 makes MANDATORY. Keep it under one year out
+# and refresh it before it lapses -- an expired file is treated as invalid.
+# tests/security-txt.spec.ts fails once this date is within 30 days.
+Expires: 2027-09-01T00:00:00.000Z

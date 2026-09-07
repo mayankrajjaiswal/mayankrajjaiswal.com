@@ -9,19 +9,25 @@
 
   <!-- Text Column -->
   <div class="flex-1 space-y-8 text-center lg:text-left z-10">
-    <h1 class="sr-only">Mayank Raj Jaiswal - Enterprise Security Architect</h1>
-    
     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50/80 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 text-xs font-semibold text-blue-700 dark:text-blue-400">
       <span class="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"></span>
       Enterprise Security Architect
     </div>
 
     <div class="space-y-4">
-      <p class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-[1.1] mb-6">
+      {/*
+        Single h1 carrying BOTH the entity name and the visible headline. The
+        largest text on the page must be the h1 -- previously the headline was a
+        <p> and the h1 was sr-only, so the dominant visual text had no semantic
+        weight. The sr-only span keeps "Mayank Raj Jaiswal" as the first thing in
+        the accessible name for entity SEO without altering the visual design.
+      */}
+      <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 dark:text-slate-50 leading-[1.1] mb-6">
+        <span class="sr-only">Mayank Raj Jaiswal — Enterprise Security Architect. </span>
         Building Trust <br />
         <span class="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Through Security.</span>
-      </p>
-      
+      </h1>
+
       <p class="text-lg sm:text-xl md:text-2xl font-medium text-slate-700 dark:text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
         Enterprise Security Architect specializing in Identity & Access Management, Cybersecurity, Artificial Intelligence, Cloud Security, and Enterprise Software Architecture.
       </p>
@@ -79,15 +85,35 @@
           <circle cx="12" cy="7" r="4"></circle>
         </svg>
       </div>
-      <img 
-        src="/images/mayank-portrait.jpg" 
-        alt="Mayank Raj Jaiswal" 
-        class="absolute inset-0 object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-500" 
-        loading="eager"
-        decoding="async"
-        fetchpriority="high"
-        onerror="this.style.opacity='0'; this.style.pointerEvents='none';" 
-      />
+      {/*
+        LCP element. Served as AVIF -> WebP -> JPEG so modern browsers get the
+        ~10KB AVIF instead of the 39KB original. Pre-cropped to the rendered 4:5
+        box (the source is 3:2, so the browser was downloading pixels it then
+        cropped away). width/height are set explicitly to reserve layout space
+        and keep CLS at zero even before CSS applies.
+      */}
+      <picture>
+        <source
+          type="image/avif"
+          srcset="/images/mayank-portrait-448.avif 1x, /images/mayank-portrait-896.avif 2x"
+        />
+        <source
+          type="image/webp"
+          srcset="/images/mayank-portrait-448.webp 1x, /images/mayank-portrait-896.webp 2x"
+        />
+        <img
+          src="/images/mayank-portrait-448.jpg"
+          srcset="/images/mayank-portrait-448.jpg 1x, /images/mayank-portrait-896.jpg 2x"
+          alt="Mayank Raj Jaiswal speaking at a podium"
+          width="448"
+          height="560"
+          class="absolute inset-0 object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-500"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+          onerror="this.style.opacity='0'; this.style.pointerEvents='none';"
+        />
+      </picture>
     </div>
     
     <!-- Float Tags -->

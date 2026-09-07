@@ -7,8 +7,20 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Geist', 'Inter', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        // 'Inter' was listed here but is no longer downloaded (fonts are now
+        // self-hosted, Geist only). Fall back to the system UI stack instead of
+        // naming a font that is not guaranteed to exist locally.
+        sans: [
+          'Geist',
+          'system-ui',
+          '-apple-system',
+          'Segoe UI',
+          'Roboto',
+          'Helvetica Neue',
+          'Arial',
+          'sans-serif',
+        ],
+        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       colors: {
         slate: {

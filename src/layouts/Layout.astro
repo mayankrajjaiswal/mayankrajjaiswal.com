@@ -13,6 +13,52 @@ interface Props {
 const { title, description, ogType = 'website', pubDate, preloadImage, tags = [] } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
+/**
+ * Content Security Policy, delivered in-document.
+ *
+ * GitHub Pages cannot send custom HTTP response headers, so vercel.json and
+ * public/_headers are inert on the live site and this meta tag is the only
+ * enforcement available. Keep all three in sync for a future host migration.
+ *
+ * Deliverable via <meta>:      Content-Security-Policy, Referrer-Policy.
+ * NOT deliverable via <meta>:  Strict-Transport-Security (use Pages' "Enforce
+ *   HTTPS"), X-Content-Type-Options (no meta form), and frame-ancestors /
+ *   X-Frame-Options -- hence the inline frame-buster further down.
+ *
+ * `upgrade-insecure-requests` is emitted only for the real https:// site. It
+ * rewrites every http:// URL to https://, which breaks `astro dev` and
+ * `astro preview` (both serve plain HTTP on localhost): WebKit honours the
+ * upgrade, fails to reach https://localhost:4321, and the page renders with no
+ * CSS, no fonts and no service worker. Chromium and Firefox exempt localhost,
+ * so the breakage is invisible there. Note `astro preview` builds in PROD mode,
+ * so import.meta.env.PROD cannot distinguish it from a real deploy -- hence the
+ * explicit PUBLIC_PLAYWRIGHT flag below.
+ */
+const cspDirectives = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "font-src 'self'",
+  "img-src 'self' data:",
+  "connect-src 'self' https://api.web3forms.com",
+  "form-action 'self' https://api.web3forms.com",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-src 'none'",
+  "worker-src 'self'",
+  "manifest-src 'self'",
+];
+
+// PUBLIC_PLAYWRIGHT=1 is set by the webServer command in playwright.config.ts,
+// which serves the production build over plain HTTP on localhost. Everything
+// else -- including the real deploy -- gets the directive.
+// (Astro only exposes PUBLIC_*-prefixed vars to import.meta.env.)
+if (!import.meta.env.PUBLIC_PLAYWRIGHT) {
+  cspDirectives.push('upgrade-insecure-requests');
+}
+
+const csp = cspDirectives.join('; ');
+
 // Helper to map blog tags to verified Wikipedia cryptographic entities (Linked Data/GEO)
 const getArticleAbout = (tagsArray: string[] = []) => {
   const aboutList = [];
@@ -55,7 +101,9 @@ const personSchema = {
   "@id": "https://mayankrajjaiswal.com/#person",
   "name": "Mayank Raj Jaiswal",
   "url": "https://mayankrajjaiswal.com",
-  "image": "https://mayankrajjaiswal.com/images/mayank-portrait.jpg",
+  // 2x portrait crop: schema.org consumers prefer a larger, correctly-framed
+  // image than the 3:2 original, which crops awkwardly in square/portrait cards.
+  "image": "https://mayankrajjaiswal.com/images/mayank-portrait-896.jpg",
   "jobTitle": "Enterprise Security Architect",
   "description": "Enterprise Security Architect specializing in Identity & Access Management, Cybersecurity, Artificial Intelligence, Cloud Security, and Enterprise Software Architecture.",
   "worksFor": {
@@ -125,10 +173,15 @@ const personSchema = {
     "OAuth 2.0 & OpenID Connect",
     "DevSecOps"
   ],
+  // Every sameAs target must be a live, verifiable profile: Google uses these for
+  // entity reconciliation, so a dead URL is a worse signal than a missing one.
+  // An ORCID was removed here because the ID failed the ISO 7064 MOD 11-2 check
+  // digit that every ORCID must satisfy. To re-add one, verify BOTH the checksum
+  // and https://pub.orcid.org/v3.0/<id>/person first — tests/seo-schema.spec.ts
+  // enforces this automatically.
   "sameAs": [
     "https://github.com/mayankrajjaiswal",
-    "https://linkedin.com/in/mayankrajjaiswal",
-    "https://orcid.org/0009-0005-7281-291X"
+    "https://linkedin.com/in/mayankrajjaiswal"
   ]
 };
 
@@ -169,6 +222,13 @@ const articleJsonLd = ogType === 'article' ? {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {/*
+      Raster fallbacks. SVG favicons are unsupported by Safari's home-screen
+      bookmark and by Android's PWA installer, which require PNGs -- an
+      SVG-only manifest silently blocks the install prompt.
+    */}
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <meta name="generator" content={Astro.generator} />
     
     <!-- Primary Meta Tags -->
@@ -178,11 +238,35 @@ const articleJsonLd = ogType === 'article' ? {
     <link rel="canonical" href={canonicalURL} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title="Writing & Insights | Mayank Raj Jaiswal" href="/rss.xml" />
-    {preloadImage && <link rel="preload" as="image" href={preloadImage} />}
-
-    <!-- Search Engine Verifications (Webmaster Tools) -->
-    <meta name="google-site-verification" content="YOUR_GOOGLE_VERIFICATION_KEY_HERE" />
-    <meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_KEY_HERE" />
+    {/*
+      Preload the LCP portrait in the SAME format <picture> will choose, using
+      imagesrcset + type so the browser negotiates AVIF/WebP/JPEG identically.
+      A plain href preload would fetch a file the page then never uses.
+    */}
+    {preloadImage && (
+      <>
+        <link
+          rel="preload"
+          as="image"
+          type="image/avif"
+          imagesrcset="/images/mayank-portrait-448.avif 1x, /images/mayank-portrait-896.avif 2x"
+          fetchpriority="high"
+        />
+        <link
+          rel="preload"
+          as="image"
+          type="image/webp"
+          imagesrcset="/images/mayank-portrait-448.webp 1x, /images/mayank-portrait-896.webp 2x"
+        />
+      </>
+    )}
+    {/*
+      Search-console verification: intentionally omitted. Placeholder values
+      ("YOUR_..._KEY_HERE") for google-site-verification and msvalidate.01 were
+      shipping to production, which verifies nothing and just adds noise. Add the
+      real meta tag only once you have the key from Google Search Console / Bing
+      Webmaster Tools -- DNS TXT verification is a cleaner alternative.
+    */}
 
     <!-- PWA Installable Manifest & Theme Colors -->
     <link rel="manifest" href="/manifest.json" />
@@ -214,33 +298,25 @@ const articleJsonLd = ogType === 'article' ? {
     <meta property="twitter:image" content={new URL('/og-image.jpg', Astro.site)} />
     <meta name="twitter:image:alt" content="Mayank Raj Jaiswal - Enterprise Security Architect" />
 
-    {/*
-      Security policy delivered in-document.
-
-      GitHub Pages cannot send custom HTTP response headers, so vercel.json and
-      public/_headers are inert on the live site. These meta equivalents are the
-      only enforcement available on this host.
-
-      Deliverable via meta: Content-Security-Policy, Referrer-Policy.
-      NOT deliverable via meta (ignored by browsers) and therefore still absent:
-        - Strict-Transport-Security  -> rely on GitHub Pages "Enforce HTTPS"
-        - X-Frame-Options            -> superseded by frame-ancestors, which is
-                                        itself ignored in meta; see frame-buster
-                                        in the anti-clickjacking script below
-        - X-Content-Type-Options     -> no meta form exists
-      Moving to a host that supports headers (Cloudflare/Netlify/Vercel) would
-      restore the full set from the configs already in this repo.
-    */}
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.web3forms.com; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'; frame-src 'none'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"
-    />
+    {/* See the `csp` constant above for the policy and its constraints. */}
+    <meta http-equiv="Content-Security-Policy" content={csp} />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 
-    <!-- Preload fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    {/*
+      Self-hosted variable fonts (see @font-face in src/styles/global.css).
+      Preloaded because they are discovered late -- the browser only finds them
+      after parsing the CSS. crossorigin is REQUIRED on font preloads even
+      same-origin; without it the browser fetches the file twice.
+      Geist is preloaded (used site-wide); JetBrains Mono is not, since it only
+      appears in code blocks and tech tags below the fold.
+    */}
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/geist-latin-var.woff2"
+      crossorigin="anonymous"
+    />
 
     <!--
       Anti-clickjacking fallback. Replaces X-Frame-Options / frame-ancestors,
@@ -274,6 +350,35 @@ const articleJsonLd = ogType === 'article' ? {
     <!-- JSON-LD -->
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     {articleJsonLd && <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />}
+
+    {/*
+      ── Analytics (not yet enabled) ───────────────────────────────────────────
+      No provider is wired up, so the site currently has no traffic visibility.
+      All three options below are cookieless and need no consent banner.
+
+      To enable Cloudflare Web Analytics (free, unlimited):
+        1. Add the site at dash.cloudflare.com -> Web Analytics, copy the token.
+        2. Uncomment the script below and paste the token.
+        3. Add to the CSP above: script-src ... https://static.cloudflareinsights.com
+           and connect-src ... https://cloudflareinsights.com
+
+      <script
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "REPLACE_WITH_TOKEN"}'
+      />
+
+      Plausible (paid) — script-src + connect-src: https://plausible.io
+      <script defer data-domain="mayankrajjaiswal.com" src="https://plausible.io/js/script.js" />
+
+      GoatCounter (free) — script-src + connect-src: https://<code>.goatcounter.com
+      <script defer data-goatcounter="https://REPLACE.goatcounter.com/count"
+              src="//gc.zgo.at/count.js" />
+
+      NOTE: the CSP is enforced via <meta http-equiv> above. Adding a script
+      without updating script-src will cause the browser to silently block it.
+      tests/csp.spec.ts fails on any CSP violation, so a mismatch is caught.
+    */}
   </head>
   <body class="min-h-[100dvh] flex flex-col">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:font-bold focus:rounded-xl focus:shadow-lg focus:outline-none">

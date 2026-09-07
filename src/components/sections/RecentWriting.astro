@@ -35,7 +35,7 @@ const recentPosts = posts.slice(0, 3).map(post => {
       </div>
       
       <a 
-        href="/blog" 
+        href="/blog/" 
         class="inline-flex items-center justify-center px-5 py-3 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-900 text-sm font-bold text-slate-950 dark:text-slate-100 transition-all shadow-sm hover:shadow shrink-0"
       >
         View All Articles
@@ -46,7 +46,7 @@ const recentPosts = posts.slice(0, 3).map(post => {
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
       {recentPosts.map(post => (
         <a 
-          href={`/blog/${post.slug}`}
+          href={`/blog/${post.slug}/`}
           data-glow
           class="group bg-white dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
         >
@@ -56,7 +56,7 @@ const recentPosts = posts.slice(0, 3).map(post => {
               <span class="px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-400 rounded-md border border-blue-100 dark:border-blue-900/20">
                 {post.data.tags[0] || 'Security'}
               </span>
-              <span class="text-xs text-slate-400 dark:text-slate-500 font-medium flex items-center gap-1">
+              <span class="text-xs text-slate-600 dark:text-slate-400 font-medium flex items-center gap-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline shrink-0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 {post.readingTime} min read
               </span>
@@ -75,7 +75,7 @@ const recentPosts = posts.slice(0, 3).map(post => {
 
           <!-- Date & Signpost Link -->
           <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between">
-            <span class="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
               {new Date(post.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
             </span>
             <span class="text-xs font-bold text-blue-600 dark:text-blue-400 inline-flex items-center gap-1 group-hover:underline">

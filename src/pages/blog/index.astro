@@ -79,7 +79,7 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
             class="group relative flex flex-col items-start"
           >
             <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-              <a href={`/blog/${post.slug}`}>
+              <a href={`/blog/${post.slug}/`}>
                 <span class="absolute -inset-y-2.5 -inset-x-4 md:-inset-y-4 md:-inset-x-6 z-0 scale-95 bg-slate-50 dark:bg-slate-900/50 opacity-0 transition group-hover:scale-100 group-hover:opacity-100 rounded-2xl" />
                 <span class="relative z-10">{post.data.title}</span>
               </a>

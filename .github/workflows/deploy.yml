@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -15,16 +17,54 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  # Quality gate. Runs first and blocks the build/deploy on failure, so a
+  # regression in accessibility, SEO structure or CSP can never reach
+  # production. Previously the workflow only audited dependencies and built,
+  # meaning a failing test suite still deployed.
+  test:
+    name: Test (a11y, SEO, CSP)
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout your repository using git
+      - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: DevSecOps Dependency Audit
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: DevSecOps dependency audit
         run: npm audit --audit-level=high
         continue-on-error: true
-      
+
+      # Only Chromium is installed here: the suite is engine-agnostic and this
+      # keeps the gate fast. Run all three locally before pushing.
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright suite
+        run: npx playwright test --project=chromium
+
+      - name: Upload report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  build:
+    name: Build
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Install, build, and upload your site
         uses: withastro/action@v2
         with:
@@ -32,7 +72,10 @@ jobs:
           package-manager: npm
 
   deploy:
+    name: Deploy
     needs: build
+    # Never publish from a pull request — validate only.
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

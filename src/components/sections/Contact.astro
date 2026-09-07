@@ -24,8 +24,20 @@
       <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" class="space-y-6">
         <!-- Web3Forms Access Key -->
         <input type="hidden" name="access_key" value="d402893c-83d3-4a73-b85a-5385b8fa5d4a" />
-        <!-- Anti-Spam Honeypot -->
-        <input type="checkbox" name="botcheck" class="hidden" style="display: none;" />
+        {/*
+          Anti-spam honeypot: bots tick it, humans never see it. Explicitly
+          removed from the tab order and the a11y tree so a screen-reader or
+          keyboard user cannot land on an unlabelled control and accidentally
+          mark their own submission as spam.
+        */}
+        <input
+          type="checkbox"
+          name="botcheck"
+          class="hidden"
+          style="display: none;"
+          tabindex="-1"
+          aria-hidden="true"
+        />
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>

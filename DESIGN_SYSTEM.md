@@ -18,8 +18,10 @@ The landing page is a continuous scroll experience, with separate routes for the
 9. **Certifications & Education:** Credentials establishing formal authority.
 10. **Professional Timeline:** High-level career journey visualization.
 11. **Recent Writing:** Latest posts surfaced from the blog content collection.
-12. **Contact:** Professional closing and connection links.
-13. **Global Footer:** Copyright, social links, quick navigation.
+12. **Recommendations:** Attributed testimonials. Data-driven and *auto-hidden*
+    while `src/data/testimonials.ts` is empty, so no placeholder block ever ships.
+13. **Contact:** Professional closing and connection links.
+14. **Global Footer:** Copyright, social links, quick navigation.
 
 Beyond the single-page scroll there are real routes: `/blog`, `/blog/[slug]`,
 `/404`, and `/rss.xml`.
@@ -50,10 +52,18 @@ Beyond the single-page scroll there are real routes: `/blog`, `/blog/[slug]`,
 - **Secondary (Body):** `Inter` (highly readable for long-form text).
 - **Monospace (Code & Tech tags):** `JetBrains Mono`.
 
-Resolved via `font-sans: ['Geist', 'Inter', 'sans-serif']` and
-`font-mono: ['JetBrains Mono', 'monospace']` in `tailwind.config.mjs`. All faces
-currently load from the Google Fonts CDN in `Layout.astro` (see the README's
-*Known Gaps* — self-hosting is still outstanding).
+**Self-hosted variable fonts.** `@font-face` declarations live in
+`src/styles/global.css`, files in `public/fonts/`. One variable file per family
+covers the entire 100-900 weight axis, latin subset, ~69KB for both — so
+`font-medium` through `font-extrabold` all resolve from a single request with no
+third-party origin and no render-blocking CDN call.
+
+Fallbacks are the system UI stack (`system-ui`, `-apple-system`, `Segoe UI`, …),
+not `Inter` — naming a font that may not be installed locally gains nothing.
+`font-display: swap` means a slow font never blocks first paint.
+
+To change families, update `@font-face` in `global.css`, `fontFamily` in
+`tailwind.config.mjs`, and the preload in `Layout.astro` together.
 - **Scale:**
   - H1: `text-5xl md:text-7xl font-bold tracking-tight`
   - H2: `text-3xl md:text-4xl font-semibold`
@@ -139,6 +149,12 @@ size make them look subtler than they measure.
 **Valid shades only.** `tailwind.config.mjs` defines `slate` 50–950. Anything else
 (`slate-750`, `blue-350`) compiles to nothing and fails silently — no error, no
 style. Two such typos existed in this codebase and were fixed.
+
+**Enforced automatically.** `tests/accessibility.spec.ts` runs axe against every
+route in both themes *and* greps the built markup for the banned pairings above,
+so a regression fails CI instead of reaching production. The pairing
+`text-slate-400 dark:text-slate-500` was live on six elements across the blog
+pages and header before this guard existed.
 
 ## 11. Interactive Component Requirements
 

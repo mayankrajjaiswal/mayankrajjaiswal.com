@@ -31,7 +31,7 @@
         </button>
         <button 
           id="tab-oauth"
-          class="px-5 py-3 text-sm font-bold border-b-2 border-transparent text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-50 shrink-0 transition-all flex items-center gap-2"
+          class="px-5 py-3 text-sm font-bold border-b-2 border-transparent text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-50 shrink-0 transition-all flex items-center gap-2"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
           OAuth 2.0 Flow
@@ -70,7 +70,7 @@
 
           <!-- Flow Diagram (Right Column) -->
           <div class="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col justify-between shadow-sm min-h-[250px]">
-            <div class="flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-wider text-slate-400 mb-6">
+            <div class="flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-6">
               <span>Local Device (Client)</span>
               <span>Secure Connection</span>
               <span>Relying Party (IDP)</span>
@@ -86,7 +86,7 @@
               <!-- Device Node -->
               <div id="node-device" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center gap-1 z-10 transition-all duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600 dark:text-slate-400"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
-                <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 dark:text-slate-400">TPM/Key</span>
+                <span class="text-[9px] sm:text-[10px] font-bold text-slate-600 dark:text-slate-400">TPM/Key</span>
               </div>
 
               <!-- Transfer bubble -->
@@ -97,12 +97,12 @@
               <!-- IDP Node -->
               <div id="node-server" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center gap-1 z-10 transition-all duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600 dark:text-slate-400"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
-                <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 dark:text-slate-400">IDP Server</span>
+                <span class="text-[9px] sm:text-[10px] font-bold text-slate-600 dark:text-slate-400">IDP Server</span>
               </div>
             </div>
 
             <!-- Dynamic text status bubble -->
-            <div id="fido-status-text" class="text-center text-xs font-bold text-slate-500 dark:text-slate-400 mt-6 min-h-[16px]">
+            <div id="fido-status-text" class="text-center text-xs font-bold text-slate-600 dark:text-slate-400 mt-6 min-h-[16px]">
               Ready. Select 'Register Passkey' to begin.
             </div>
           </div>
@@ -142,7 +142,7 @@
 
           <!-- Flow Diagram (Right Column) -->
           <div class="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 flex flex-col justify-between shadow-sm min-h-[250px]">
-            <div class="flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-wider text-slate-400 mb-6">
+            <div class="flex items-center justify-between gap-4 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-6">
               <span>Client App</span>
               <span>OAuth Scope Channels</span>
               <span>Auth ID Server</span>
@@ -158,7 +158,7 @@
               <!-- Client Node -->
               <div id="node-oauth-client" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center gap-1 z-10 transition-all duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600 dark:text-slate-400"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
-                <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 dark:text-slate-400">Web App</span>
+                <span class="text-[9px] sm:text-[10px] font-bold text-slate-600 dark:text-slate-400">Web App</span>
               </div>
 
               <!-- Transfer bubble -->
@@ -169,12 +169,12 @@
               <!-- Auth Server Node -->
               <div id="node-oauth-server" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center gap-1 z-10 transition-all duration-300">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-600 dark:text-slate-400"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                <span class="text-[9px] sm:text-[10px] font-bold text-slate-500 dark:text-slate-400">OAuth Server</span>
+                <span class="text-[9px] sm:text-[10px] font-bold text-slate-600 dark:text-slate-400">OAuth Server</span>
               </div>
             </div>
 
             <!-- Dynamic text status bubble -->
-            <div id="oauth-status-text" class="text-center text-xs font-bold text-slate-500 dark:text-slate-400 mt-6 min-h-[16px]">
+            <div id="oauth-status-text" class="text-center text-xs font-bold text-slate-600 dark:text-slate-400 mt-6 min-h-[16px]">
               Ready. Select 'Request Authorization Code' to begin.
             </div>
           </div>
@@ -189,18 +189,18 @@
             <span class="w-3 h-3 rounded-full bg-red-500"></span>
             <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
             <span class="w-3 h-3 rounded-full bg-green-500"></span>
-            <span class="text-xs text-slate-500 font-bold ml-2">Console Outputs</span>
+            <span class="text-xs text-slate-400 font-bold ml-2">Console Outputs</span>
           </div>
-          <button 
+          <button
             id="console-clear"
-            class="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-red-400 transition-colors"
+            class="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-red-400 transition-colors"
           >
             Clear Log
           </button>
         </div>
 
         <div id="console-stream" class="h-40 overflow-y-auto space-y-2 text-xs leading-relaxed text-slate-300 font-mono scrollbar-thin">
-          <p class="text-slate-500">[SYSTEM] Cryptographic sandbox initialized. WebAuthn and OIDC services are active.</p>
+          <p class="text-slate-400">[SYSTEM] Cryptographic sandbox initialized. WebAuthn and OIDC services are active.</p>
         </div>
       </div>
 
@@ -221,9 +221,9 @@
     if (tabFido && tabOauth && fidoContent && oauthContent) {
       tabFido.addEventListener('click', () => {
         tabFido.classList.add('border-b-2', 'border-blue-500', 'text-blue-600', 'dark:text-blue-400');
-        tabFido.classList.remove('border-transparent', 'text-slate-500');
+        tabFido.classList.remove('border-transparent', 'text-slate-600', 'dark:text-slate-400');
         tabOauth.classList.remove('border-b-2', 'border-blue-500', 'text-blue-600', 'dark:text-blue-400');
-        tabOauth.classList.add('border-transparent', 'text-slate-500');
+        tabOauth.classList.add('border-transparent', 'text-slate-600', 'dark:text-slate-400');
         fidoContent.classList.remove('hidden');
         oauthContent.classList.add('hidden');
         addLog('SYSTEM', 'Switched context to WebAuthn / FIDO2 Passkey testing module.');
@@ -231,9 +231,9 @@
 
       tabOauth.addEventListener('click', () => {
         tabOauth.classList.add('border-b-2', 'border-blue-500', 'text-blue-600', 'dark:text-blue-400');
-        tabOauth.classList.remove('border-transparent', 'text-slate-500');
+        tabOauth.classList.remove('border-transparent', 'text-slate-600', 'dark:text-slate-400');
         tabFido.classList.remove('border-b-2', 'border-blue-500', 'text-blue-600', 'dark:text-blue-400');
-        tabFido.classList.add('border-transparent', 'text-slate-500');
+        tabFido.classList.add('border-transparent', 'text-slate-600', 'dark:text-slate-400');
         oauthContent.classList.remove('hidden');
         fidoContent.classList.add('hidden');
         addLog('SYSTEM', 'Switched context to OAuth 2.0 Auth Code Grant simulation.');
@@ -248,7 +248,7 @@
       if (!consoleStream) return;
       const p = document.createElement('p');
       let colorClass = 'text-slate-300';
-      if (level === 'SYSTEM') colorClass = 'text-slate-500';
+      if (level === 'SYSTEM') colorClass = 'text-slate-400';
       if (level === 'POST' || level === 'GET') colorClass = 'text-indigo-400';
       if (level === 'SUCCESS') colorClass = 'text-emerald-500';
       if (level === 'CRYPTO') colorClass = 'text-blue-400';
@@ -260,7 +260,7 @@
 
     if (clearBtn && consoleStream) {
       clearBtn.addEventListener('click', () => {
-        consoleStream.innerHTML = `<p class="text-slate-500">[SYSTEM] Terminal logs cleared. Sandbox is clean.</p>`;
+        consoleStream.innerHTML = `<p class="text-slate-400">[SYSTEM] Terminal logs cleared. Sandbox is clean.</p>`;
       });
     }
 

@@ -214,10 +214,45 @@ const articleJsonLd = ogType === 'article' ? {
     <meta property="twitter:image" content={new URL('/og-image.jpg', Astro.site)} />
     <meta name="twitter:image:alt" content="Mayank Raj Jaiswal - Enterprise Security Architect" />
 
+    {/*
+      Security policy delivered in-document.
+
+      GitHub Pages cannot send custom HTTP response headers, so vercel.json and
+      public/_headers are inert on the live site. These meta equivalents are the
+      only enforcement available on this host.
+
+      Deliverable via meta: Content-Security-Policy, Referrer-Policy.
+      NOT deliverable via meta (ignored by browsers) and therefore still absent:
+        - Strict-Transport-Security  -> rely on GitHub Pages "Enforce HTTPS"
+        - X-Frame-Options            -> superseded by frame-ancestors, which is
+                                        itself ignored in meta; see frame-buster
+                                        in the anti-clickjacking script below
+        - X-Content-Type-Options     -> no meta form exists
+      Moving to a host that supports headers (Cloudflare/Netlify/Vercel) would
+      restore the full set from the configs already in this repo.
+    */}
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.web3forms.com; form-action 'self' https://api.web3forms.com; base-uri 'self'; object-src 'none'; frame-src 'none'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
     <!-- Preload fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+    <!--
+      Anti-clickjacking fallback. Replaces X-Frame-Options / frame-ancestors,
+      neither of which can be delivered from GitHub Pages. Runs before paint so
+      a framing attacker never sees rendered content.
+    -->
+    <script is:inline>
+      if (window.self !== window.top) {
+        document.documentElement.style.display = 'none';
+        window.top.location = window.self.location;
+      }
+    </script>
 
     <!-- Blocking Script to prevent Theme Flashing -->
     <script is:inline>

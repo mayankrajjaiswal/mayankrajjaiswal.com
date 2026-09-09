@@ -41,8 +41,51 @@ jobs:
         run: npm audit --audit-level=high
         continue-on-error: true
 
+      # WORKAROUND for actions/runner-images#14708 ("Chrome repository update
+      # fails intermittently"), which broke this repo's deploy gate on
+      # 2026-09-09 (run 34383945217, identically on all 3 attempts).
+      #
+      # Chain of causation:
+      #   1. The google-chrome-stable package's postinst registers a deb822 apt
+      #      source at /etc/apt/sources.list.d/google-chrome.sources pointing at
+      #      dl.google.com/linux/chrome-stable/deb. (The runner image's own
+      #      cleanup only removes the legacy google-chrome.list, so Google's
+      #      migration to deb822 silently defeated it.)
+      #   2. dl.google.com served a stale Packages.gz against a newer InRelease,
+      #      so `apt-get update` failed with "Hash Sum mismatch".
+      #   3. `playwright install --with-deps` runs `apt-get update` and
+      #      `apt-get install ...` chained on success, and apt-get update exits
+      #      non-zero if ANY source fails -- so the OS-dependency phase died and
+      #      the browser never installed.
+      #
+      # Retrying does not fix this: the mismatch is a deterministic server-side
+      # index skew (hours, not seconds), and apt already retries internally.
+      # Three full job re-runs spread over ~20 minutes all failed identically.
+      #
+      # Playwright's Chromium comes from Microsoft's CDN, not this apt source,
+      # and none of its dependencies live in Google's repo -- so removing the
+      # source is safe and sufficient. Both filename variants are covered
+      # because the deb822 name is the one that actually matters now.
+      # `|| true` keeps the step green when the files are already absent.
+      #
+      # Remove this step once #14708 is closed and the runner image no longer
+      # ships a live Google Chrome apt source.
+      - name: Work around runner-images#14708 (stale Google Chrome apt index)
+        run: |
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.sources \
+                     /etc/apt/sources.list.d/google-chrome.list \
+                     /etc/apt/sources.list.d/google-chrome.list.save || true
+          echo "Remaining apt sources:"
+          ls -1 /etc/apt/sources.list.d/ || true
+
       # Only Chromium is installed here: the suite is engine-agnostic and this
       # keeps the gate fast. Run all three locally before pushing.
+      #
+      # `--with-deps` is deliberately retained: Playwright's Chromium needs
+      # system libraries (libdrm2, libgbm1, libnss3, ...) that a bare
+      # `playwright install chromium` would not install. Some are only present
+      # on the runner transitively, so dropping the flag would appear to work
+      # until the image slimmed down, then fail confusingly.
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 

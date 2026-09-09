@@ -6,7 +6,7 @@ import Layout from '../layouts/Layout.astro';
   title="Access Denied: 404 | Mayank Raj Jaiswal" 
   description="Error 404: Unauthenticated Endpoint Access. Origin routing table failed."
 >
-  <main class="flex-grow flex items-center justify-center min-h-[100dvh] bg-slate-950 text-emerald-500 p-6 font-mono selection:bg-emerald-900/50 selection:text-emerald-200">
+  <main id="main-content" tabindex="-1" class="flex-grow flex items-center justify-center min-h-[100dvh] bg-slate-950 text-emerald-500 p-6 font-mono outline-none selection:bg-emerald-900/50 selection:text-emerald-200">
     <!-- Retro Scanning Line Effect -->
     <div class="absolute inset-0 bg-radial-scanning pointer-events-none opacity-10"></div>
 
@@ -25,9 +25,9 @@ import Layout from '../layouts/Layout.astro';
 
       <!-- Terminal Body Content -->
       <div class="space-y-4 font-mono text-sm sm:text-base leading-relaxed">
-        <p class="text-red-500 font-bold tracking-wider mb-2">
+        <h1 class="text-red-500 font-bold tracking-wider mb-2 text-sm sm:text-base">
           [CRITICAL ERROR] STATUS CODE: 404_ENDPOINT_NOT_FOUND
-        </p>
+        </h1>
         <p class="text-slate-400">
           <span class="text-emerald-400 font-bold">$</span> curl -I https://mayankrajjaiswal.com/unresolved-target
         </p>

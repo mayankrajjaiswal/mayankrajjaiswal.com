@@ -1,0 +1,89 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/layout/Header.astro';
+import Footer from '../../../components/layout/Footer.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const allTags = [...new Set(posts.flatMap((post) => post.data.tags || []))];
+
+  return allTags.map((tag) => ({
+    params: { tag: tag.toLowerCase().replace(/\s+/g, '-') },
+    props: { tag },
+  }));
+}
+
+const { tag } = Astro.props;
+
+const posts = (await getCollection('blog'))
+  .filter((post) => (post.data.tags || []).includes(tag))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const postsWithReadingTime = posts.map((post) => {
+  const wordCount = post.body.split(/\s+/).filter(Boolean).length;
+  const readingTime = Math.ceil(wordCount / 200);
+  return { ...post, readingTime };
+});
+---
+
+<Layout
+  title={`${tag} Articles | Mayank Raj Jaiswal`}
+  description={`Articles tagged "${tag}" — technical writing on enterprise security, identity, and AI from Mayank Raj Jaiswal.`}
+>
+  <Header />
+  <main id="main-content" tabindex="-1" class="flex-grow pt-32 pb-24 bg-white dark:bg-slate-950 outline-none">
+    <div class="max-w-4xl mx-auto px-6">
+
+      <a href="/blog/" class="inline-flex items-center min-h-[24px] py-1 gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400 mb-8 hover:underline">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" x2="5" y1="12" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        All Articles
+      </a>
+
+      <div class="max-w-2xl mb-12">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-bold text-blue-700 dark:text-blue-400 mb-4 uppercase tracking-widest">
+          Tag
+        </span>
+        <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-50">
+          {tag}
+        </h1>
+        <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mt-4">
+          {postsWithReadingTime.length} article{postsWithReadingTime.length === 1 ? '' : 's'} tagged "{tag}".
+        </p>
+      </div>
+
+      <div class="space-y-16">
+        {postsWithReadingTime.map(post => (
+          <article class="group relative flex flex-col items-start">
+            <h2 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-50 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              <a href={`/blog/${post.slug}/`}>
+                <span class="absolute -inset-y-2.5 -inset-x-4 md:-inset-y-4 md:-inset-x-6 z-0 scale-95 bg-slate-50 dark:bg-slate-900/50 opacity-0 transition group-hover:scale-100 group-hover:opacity-100 rounded-2xl" />
+                <span class="relative z-10">{post.data.title}</span>
+              </a>
+            </h2>
+
+            <p class="relative z-10 order-first mb-3 flex flex-wrap items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+              <span>{new Date(post.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              <span class="text-slate-300 dark:text-slate-800">&bull;</span>
+              <span class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline shrink-0"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                {post.readingTime} min read
+              </span>
+            </p>
+
+            <p class="relative z-10 mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              {post.data.description}
+            </p>
+
+            <div class="relative z-10 mt-4 flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400">
+              Read article
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 transition-transform group-hover:translate-x-1"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+          </article>
+        ))}
+      </div>
+
+    </div>
+  </main>
+  <Footer />
+</Layout>

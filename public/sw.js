@@ -1,10 +1,10 @@
-const CACHE_NAME = 'mayankrajjaiswal-v2';
+const CACHE_NAME = 'mayankrajjaiswal-v3';
 const ASSETS_TO_CACHE = [
   '/',
-  '/blog',
+  '/blog/',
   '/404.html',
   '/favicon.svg',
-  '/images/mayank-portrait.jpg'
+  '/images/mayank-portrait-448.jpg'
 ];
 
 // Install Event - Pre-cache critical shell assets

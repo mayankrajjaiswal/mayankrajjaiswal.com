@@ -15,4 +15,4 @@
   Styled with: Tailwind CSS (v3.x)
   Tested with: Playwright, Axe-Core Accessibility
   Language: TypeScript
-  Standards: RFC 9116 (security.txt), RFC 2068 (humans.txt), WCAG AAA A11y Standard compliance.
+  Standards: RFC 9116 (security.txt), RFC 2068 (humans.txt), WCAG 2.2 AA A11y Standard compliance.

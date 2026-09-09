@@ -97,10 +97,25 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
             <p class="relative z-10 mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
               {post.data.description}
             </p>
-            
-            <div class="relative z-10 mt-4 flex items-center text-sm font-semibold text-blue-600 dark:text-blue-400">
-              Read article
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 transition-transform group-hover:translate-x-1"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+
+            <div class="relative z-10 mt-4 flex flex-wrap items-center gap-3">
+              <a href={`/blog/${post.slug}/`} class="inline-flex items-center min-h-[24px] py-1 text-sm font-semibold text-blue-600 dark:text-blue-400">
+                Read article
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 transition-transform group-hover:translate-x-1"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+              {post.data.tags.length > 0 && (
+                <span class="flex flex-wrap items-center gap-2">
+                  <span class="text-slate-300 dark:text-slate-800" aria-hidden="true">&bull;</span>
+                  {post.data.tags.map(tag => (
+                    <a
+                      href={`/blog/tag/${tag.toLowerCase().replace(/\s+/g, '-')}/`}
+                      class="inline-flex items-center justify-center min-h-[24px] min-w-[24px] py-1 px-0.5 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    >
+                      {tag}
+                    </a>
+                  ))}
+                </span>
+              )}
             </div>
           </article>
         ))}
@@ -152,5 +167,4 @@ const allTags = [...new Set(posts.flatMap(post => post.data.tags || []))].sort()
   };
 
   setupTagFilters();
-  document.addEventListener('astro:after-swap', setupTagFilters);
 </script>

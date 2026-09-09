@@ -61,6 +61,115 @@ test.describe('Contrast rules that previously regressed', () => {
     }
   });
 
+  /**
+   * The simulator switcher was two bare <button>s with no ARIA tab semantics
+   * and no aria-selected/aria-controls -- a screen-reader user got two
+   * unlabelled buttons with no indication which was active (WCAG 4.1.2).
+   */
+  test('simulator tabs expose full ARIA tab pattern and respond to arrow keys', async ({ page }) => {
+    await goto(page, '/');
+
+    const tablist = page.locator('[role="tablist"]');
+    await expect(tablist).toHaveCount(1);
+
+    const fidoTab = page.locator('#tab-fido2');
+    const oauthTab = page.locator('#tab-oauth');
+    await expect(fidoTab).toHaveAttribute('role', 'tab');
+    await expect(oauthTab).toHaveAttribute('role', 'tab');
+    await expect(fidoTab).toHaveAttribute('aria-controls', 'content-fido2');
+    await expect(oauthTab).toHaveAttribute('aria-controls', 'content-oauth');
+
+    // FIDO2 tab selected by default.
+    await expect(fidoTab).toHaveAttribute('aria-selected', 'true');
+    await expect(oauthTab).toHaveAttribute('aria-selected', 'false');
+    await expect(page.locator('#content-fido2')).toHaveAttribute('role', 'tabpanel');
+    await expect(page.locator('#content-oauth')).toHaveAttribute('role', 'tabpanel');
+
+    // Arrow-key navigation switches the active tab (WAI-ARIA tab pattern).
+    await fidoTab.focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(oauthTab).toHaveAttribute('aria-selected', 'true');
+    await expect(fidoTab).toHaveAttribute('aria-selected', 'false');
+    await expect(page.locator('#content-oauth')).toBeVisible();
+    await expect(page.locator('#content-fido2')).toBeHidden();
+  });
+
+  /**
+   * Every status update in the simulator (registration progress, terminal
+   * log lines) was silent to assistive tech -- aria-live was absent from the
+   * entire codebase. Same gap existed on the contact form's error/success
+   * regions.
+   */
+  test('live regions exist for simulator status, terminal log, and contact form', async ({ page }) => {
+    await goto(page, '/');
+
+    await expect(page.locator('#fido-status-text')).toHaveAttribute('aria-live', 'polite');
+    await expect(page.locator('#oauth-status-text')).toHaveAttribute('aria-live', 'polite');
+    await expect(page.locator('#console-stream')).toHaveAttribute('aria-live', 'polite');
+    await expect(page.locator('#console-stream')).toHaveAttribute('role', 'log');
+
+    await expect(page.locator('#contact-form-error')).toHaveAttribute('aria-live', 'assertive');
+    await expect(page.locator('#contact-form-success')).toHaveAttribute('aria-live', 'polite');
+  });
+
+  /**
+   * The header's scroll-spy IntersectionObserver used to watch every
+   * <section id>, including several (Media, Recognition, Timeline,
+   * SecuritySimulator, ...) with no corresponding nav link. Scrolling into any
+   * of those matched no link and cleared every nav item's active state, so
+   * the header looked broken mid-page. It should now only watch sections a
+   * nav link actually points at, and never de-highlight everything.
+   */
+  test('scroll-spy does not clear the active nav item when scrolling into an untracked section', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await goto(page, '/');
+
+    // The observer's rootMargin ('-20% 0px -60% 0px') only fires within a
+    // narrow central band relative to the *viewport*, so a section much
+    // taller than the viewport (e.g. #projects, a long card grid) only ever
+    // has a sliver inside that band and can fail the 0.1 intersection
+    // threshold outright -- that's a pre-existing property of this observer
+    // setup, unrelated to the fix under test. Use #research (short, tracked)
+    // and #media (short, untracked) so the scroll lands solidly inside each.
+    const scrollSectionToCenter = async (id: string) => {
+      await page.evaluate((sectionId) => {
+        const el = document.getElementById(sectionId);
+        if (!el) throw new Error(`#${sectionId} not found`);
+        const rect = el.getBoundingClientRect();
+        // rect.top is viewport-relative; add the current scroll offset to get
+        // the section's absolute document position, then scroll so its
+        // vertical center lands at 30% down the viewport -- inside the
+        // observer's visible band (rootMargin '-20% 0px -60% 0px' keeps only
+        // roughly the 20%-40% vertical slice of the viewport "visible" to it).
+        const absoluteCenter = window.scrollY + rect.top + rect.height / 2;
+        window.scrollTo(0, absoluteCenter - window.innerHeight * 0.3);
+      }, id);
+    };
+
+    // Poll rather than a single fixed wait: the observer callback fires
+    // asynchronously, and CI/parallel-worker CPU contention (documented in
+    // CLAUDE.md as a known cause of flakiness on this suite) can push that
+    // past a short fixed timeout even though the app itself is correct.
+    const activeNavLinkCount = () => page.locator('[data-nav-link].font-semibold').count();
+
+    await scrollSectionToCenter('research');
+    await expect
+      .poll(activeNavLinkCount, { message: 'a tracked section should have an active nav link', timeout: 5_000 })
+      .toBeGreaterThan(0);
+
+    // #media has no corresponding header nav link.
+    await scrollSectionToCenter('media');
+    // A brief settle so any (incorrect) clearing has time to happen before we
+    // assert it didn't -- unlike the "greater than 0" check above, there is no
+    // later state to poll toward if this one is wrong.
+    await page.waitForTimeout(600);
+    const activeInUntracked = await page.locator('[data-nav-link].font-semibold').count();
+    expect(
+      activeInUntracked,
+      'nav should keep its last active item while scrolled through an untracked section, not clear it'
+    ).toBeGreaterThan(0);
+  });
+
   /** Interactive states are only reachable via JS, so axe cannot find them cold. */
   test('simulator tab states pass contrast in both themes', async ({ page }) => {
     for (const theme of THEMES) {
@@ -110,10 +219,7 @@ test.describe('Document structure', () => {
         };
       });
 
-      // The 404 page is intentionally minimal and has no h1.
-      if (path !== '/404/') {
-        expect(info.h1s, `${path} h1 count (found: ${JSON.stringify(info.h1s)})`).toHaveLength(1);
-      }
+      expect(info.h1s, `${path} h1 count (found: ${JSON.stringify(info.h1s)})`).toHaveLength(1);
       expect(info.skips, `${path} heading skips`).toEqual([]);
       expect(info.lang, `${path} lang attribute`).toBe('en');
       expect(info.landmarks.main, `${path} <main> landmark`).toBe(1);
@@ -161,37 +267,49 @@ test.describe('Document structure', () => {
 });
 
 test.describe('Keyboard operability', () => {
-  test('skip link is first in DOM order and becomes visible on focus', async ({ page }) => {
-    await goto(page, '/');
+  /**
+   * Exercised across every route, not just '/'. A prior regression on /404/
+   * (no id="main-content" on its <main>) passed CI because this test only ever
+   * checked the homepage — the skip link resolved on every page except one.
+   */
+  for (const path of ALL_PAGES) {
+    test(`skip link works on ${path}`, async ({ page }) => {
+      await goto(page, path);
 
-    const skip = page.locator('a[href="#main-content"]');
-    await expect(skip, 'a skip link must exist').toHaveCount(1);
+      const skip = page.locator('a[href="#main-content"]');
+      await expect(skip, `${path}: a skip link must exist`).toHaveCount(1);
 
-    // It must be the first focusable element in the DOM, so it is reachable
-    // before the nav. (WebKit omits links from sequential tab order unless the
-    // user enables "Press Tab to highlight each item", so pressing Tab is not a
-    // portable way to assert this — focus it directly instead.)
-    const isFirstFocusable = await page.evaluate(() => {
-      const focusable = document.querySelectorAll(
-        'a[href], button, input:not([type=hidden]), select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      return focusable[0]?.getAttribute('href') === '#main-content';
+      await expect(
+        page.locator('#main-content'),
+        `${path}: skip link target #main-content must exist`
+      ).toHaveCount(1);
+
+      // It must be the first focusable element in the DOM, so it is reachable
+      // before the nav. (WebKit omits links from sequential tab order unless
+      // the user enables "Press Tab to highlight each item", so pressing Tab
+      // is not a portable way to assert this — focus it directly instead.)
+      const isFirstFocusable = await page.evaluate(() => {
+        const focusable = document.querySelectorAll(
+          'a[href], button, input:not([type=hidden]), select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        return focusable[0]?.getAttribute('href') === '#main-content';
+      });
+      expect(isFirstFocusable, `${path}: skip link must be the first focusable element`).toBe(true);
+
+      // Visually hidden until focused, then clearly visible.
+      const before = await skip.evaluate((el) => el.getBoundingClientRect().height);
+      expect(before, `${path}: skip link should be visually hidden when unfocused`).toBeLessThan(2);
+
+      await skip.focus();
+      const after = await skip.evaluate((el) => el.getBoundingClientRect().height);
+      expect(after, `${path}: skip link must become visible on focus`).toBeGreaterThan(20);
+
+      // And it actually moves focus into the main landmark.
+      await page.keyboard.press('Enter');
+      await expect(page.locator('#main-content')).toBeVisible();
+      expect(new URL(page.url()).hash).toBe('#main-content');
     });
-    expect(isFirstFocusable, 'skip link must be the first focusable element').toBe(true);
-
-    // Visually hidden until focused, then clearly visible.
-    const before = await skip.evaluate((el) => el.getBoundingClientRect().height);
-    expect(before, 'skip link should be visually hidden when unfocused').toBeLessThan(2);
-
-    await skip.focus();
-    const after = await skip.evaluate((el) => el.getBoundingClientRect().height);
-    expect(after, 'skip link must become visible on focus').toBeGreaterThan(20);
-
-    // And it actually moves focus into the main landmark.
-    await page.keyboard.press('Enter');
-    await expect(page.locator('#main-content')).toBeVisible();
-    expect(new URL(page.url()).hash).toBe('#main-content');
-  });
+  }
 
   test('all interactive elements have an accessible name', async ({ page }) => {
     for (const path of ALL_PAGES) {

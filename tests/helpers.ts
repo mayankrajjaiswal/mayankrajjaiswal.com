@@ -12,7 +12,19 @@ export const ALL_PAGES = [
   '/blog/',
   '/blog/passwordless-fido2-passkeys/',
   '/blog/zero-trust-multi-cloud-architecture/',
+  '/blog/tag/iam/',
+  '/now/',
+  '/uses/',
+  '/projects/gps-tracking-platform/',
   '/404/',
+] as const;
+
+/** Case-study slugs, mirroring src/data/case-studies.ts. */
+export const CASE_STUDY_SLUGS = [
+  'gps-tracking-platform',
+  'digital-signage-platform',
+  'zerotouch-covid-devices',
+  'health-monitoring-tshirt',
 ] as const;
 
 /** Blog post slugs, mirroring src/content/blog/*.mdx. */

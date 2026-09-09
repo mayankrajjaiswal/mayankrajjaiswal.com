@@ -233,8 +233,21 @@ const isBlog = currentPath.startsWith('/blog');
     }
 
     // 3. Scroll Active State Observer
-    const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('[data-nav-link]');
+
+    // Only observe sections that a nav link actually points at. Homepage has
+    // several sections (simulator, media, recognition, timeline, ...) with no
+    // corresponding nav item -- observing those too meant every scroll into
+    // one of them matched no link and cleared the active state entirely.
+    const trackedIds = new Set(
+      [...navLinks]
+        .map(link => link.getAttribute('href') || '')
+        .filter(href => href.includes('#'))
+        .map(href => href.substring(href.indexOf('#') + 1))
+    );
+    const sections = [...document.querySelectorAll('section[id]')].filter(
+      section => trackedIds.has(section.getAttribute('id') || '')
+    );
 
     if (sections.length === 0) return;
 
@@ -281,9 +294,17 @@ const isBlog = currentPath.startsWith('/blog');
     });
   };
 
-  // Run on page load
-  setupHeaderLogic();
-
-  // Support SPA swap events
-  document.addEventListener('astro:after-swap', setupHeaderLogic);
+  // This script sits inside <Header>, which renders before <main> in the
+  // document. Running setupHeaderLogic() immediately therefore parses at a
+  // point where document.readyState is still 'loading' and every section
+  // inside <main> not yet exists -- `document.querySelectorAll('section[id]')`
+  // silently returned zero elements, so the scroll-spy observer was never
+  // created at all. Deferring to DOMContentLoaded (a no-op if it already
+  // fired) lets the mobile-drawer/theme-toggle wiring run as before while
+  // fixing the scroll-spy's actual root cause.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupHeaderLogic);
+  } else {
+    setupHeaderLogic();
+  }
 </script>

@@ -43,6 +43,29 @@ test.describe('Meta tags', () => {
     }
   });
 
+  test('og:site_name, og:locale, robots, and image dimensions are present on every page', async ({ page }) => {
+    for (const path of ALL_PAGES) {
+      await goto(page, path);
+      const meta = await page.evaluate(() => ({
+        siteName: document.querySelector('meta[property="og:site_name"]')?.getAttribute('content') ?? '',
+        locale: document.querySelector('meta[property="og:locale"]')?.getAttribute('content') ?? '',
+        robots: document.querySelector('meta[name="robots"]')?.getAttribute('content') ?? '',
+        imageWidth: document.querySelector('meta[property="og:image:width"]')?.getAttribute('content') ?? '',
+        imageHeight: document.querySelector('meta[property="og:image:height"]')?.getAttribute('content') ?? '',
+        imageType: document.querySelector('meta[property="og:image:type"]')?.getAttribute('content') ?? '',
+      }));
+
+      expect(meta.siteName, `${path} og:site_name`).toBeTruthy();
+      expect(meta.locale, `${path} og:locale`).toBeTruthy();
+      expect(meta.robots, `${path} robots meta`).toContain('max-image-preview:large');
+      // Declared dimensions must match the real 1200x630 og-image.jpg, or
+      // consumers render a card with the wrong aspect ratio.
+      expect(meta.imageWidth, `${path} og:image:width`).toBe('1200');
+      expect(meta.imageHeight, `${path} og:image:height`).toBe('630');
+      expect(meta.imageType, `${path} og:image:type`).toBe('image/jpeg');
+    }
+  });
+
   test('no placeholder verification keys are shipped', async ({ page }) => {
     for (const path of ALL_PAGES) {
       await goto(page, path);
@@ -146,6 +169,46 @@ test.describe('Structured data', () => {
       }
     }
   });
+
+  /**
+   * Every mayankrajjaiswal.com URL embedded in JSON-LD must carry the trailing
+   * slash the site actually serves under trailingSlash: 'always' -- a bare
+   * '/blog' or '/blog/${slug}' 301-redirects, contradicting the page's own
+   * canonical and the "no internal link points at a redirecting URL" rule
+   * already enforced for <a> elements.
+   */
+  test('every mayankrajjaiswal.com URL in JSON-LD is trailing-slashed', async ({ page }) => {
+    for (const path of ALL_PAGES) {
+      await goto(page, path);
+      const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
+      const badUrls: string[] = [];
+
+      for (const block of blocks) {
+        const parsed = JSON.parse(block);
+        const found = new Set<string>();
+        const walk = (value: unknown) => {
+          if (typeof value === 'string') {
+            if (/^https:\/\/mayankrajjaiswal\.com/.test(value)) found.add(value);
+          } else if (Array.isArray(value)) {
+            value.forEach(walk);
+          } else if (value && typeof value === 'object') {
+            Object.values(value).forEach(walk);
+          }
+        };
+        walk(parsed);
+
+        for (const url of found) {
+          const pathname = new URL(url).pathname;
+          // A file-like path (has a dot after the last slash) is a real
+          // resource, not a route, and is exempt from the slash rule.
+          const isFile = /\.[a-z0-9]{2,5}$/i.test(pathname);
+          if (!isFile && !pathname.endsWith('/')) badUrls.push(url);
+        }
+      }
+
+      expect(badUrls, `${path}: JSON-LD URLs missing a trailing slash`).toEqual([]);
+    }
+  });
 });
 
 test.describe('Crawlability', () => {
@@ -175,6 +238,22 @@ test.describe('Crawlability', () => {
     expect(locs.length).toBeGreaterThan(5);
     for (const loc of locs) {
       expect(loc, `${loc} should end in /`).toMatch(/\/$/);
+    }
+  });
+
+  test('every blog post in the sitemap carries a lastmod date', async ({ request }) => {
+    const sitemap = await request.get('/sitemap-0.xml');
+    const xml = await sitemap.text();
+
+    for (const slug of BLOG_SLUGS) {
+      const urlBlock = xml.match(
+        new RegExp(`<url><loc>[^<]*/blog/${slug}/</loc>(<lastmod>[^<]+</lastmod>)?</url>`)
+      );
+      expect(urlBlock, `sitemap entry for ${slug} not found`).toBeTruthy();
+      expect(urlBlock![1], `/blog/${slug}/ is missing a <lastmod>`).toBeTruthy();
+      // Must be a real, parseable date, not a build-time placeholder.
+      const date = urlBlock![1]!.replace(/<\/?lastmod>/g, '');
+      expect(Number.isNaN(new Date(date).getTime()), `${slug} lastmod "${date}" is not a valid date`).toBe(false);
     }
   });
 

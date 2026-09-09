@@ -33,19 +33,19 @@ const breadcrumbJsonLd = {
       "@type": "ListItem",
       "position": 1,
       "name": "Home",
-      "item": "https://mayankrajjaiswal.com"
+      "item": "https://mayankrajjaiswal.com/"
     },
     {
       "@type": "ListItem",
       "position": 2,
       "name": "Blog",
-      "item": "https://mayankrajjaiswal.com/blog"
+      "item": "https://mayankrajjaiswal.com/blog/"
     },
     {
       "@type": "ListItem",
       "position": 3,
       "name": frontmatter.title,
-      "item": `https://mayankrajjaiswal.com/blog/${slug}`
+      "item": `https://mayankrajjaiswal.com/blog/${slug}/`
     }
   ]
 };
@@ -231,13 +231,6 @@ const breadcrumbJsonLd = {
     updateProgress(); // Run once initially
   };
 
-  // Run initial setups
   setupCopyLink();
   setupScrollProgress();
-
-  // Support SPA transitions
-  document.addEventListener('astro:after-swap', () => {
-    setupCopyLink();
-    setupScrollProgress();
-  });
 </script>

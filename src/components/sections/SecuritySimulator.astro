@@ -21,25 +21,35 @@
     <div class="max-w-5xl mx-auto bg-slate-50 dark:bg-slate-950/40 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 md:p-8 shadow-xl backdrop-blur-md">
       
       <!-- Simulators Tab Switcher -->
-      <div class="flex border-b border-slate-200 dark:border-slate-800 pb-px mb-8 overflow-x-auto gap-2">
-        <button 
+      <div role="tablist" aria-label="Security simulators" class="flex border-b border-slate-200 dark:border-slate-800 pb-px mb-8 overflow-x-auto gap-2">
+        <button
           id="tab-fido2"
+          role="tab"
+          type="button"
+          aria-selected="true"
+          aria-controls="content-fido2"
+          tabindex="0"
           class="px-5 py-3 text-sm font-bold border-b-2 border-blue-500 text-blue-600 dark:text-blue-400 shrink-0 transition-all flex items-center gap-2"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
           FIDO2 Passkeys
         </button>
-        <button 
+        <button
           id="tab-oauth"
+          role="tab"
+          type="button"
+          aria-selected="false"
+          aria-controls="content-oauth"
+          tabindex="-1"
           class="px-5 py-3 text-sm font-bold border-b-2 border-transparent text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-50 shrink-0 transition-all flex items-center gap-2"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
           OAuth 2.0 Flow
         </button>
       </div>
 
       <!-- FIDO2 Passkeys Content -->
-      <div id="content-fido2" class="space-y-8 animate-fade-in duration-300">
+      <div id="content-fido2" role="tabpanel" aria-labelledby="tab-fido2" class="space-y-8 animate-fade-in duration-300">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           <!-- Interactive Controls (Left Column) -->
@@ -102,7 +112,7 @@
             </div>
 
             <!-- Dynamic text status bubble -->
-            <div id="fido-status-text" class="text-center text-xs font-bold text-slate-600 dark:text-slate-400 mt-6 min-h-[16px]">
+            <div id="fido-status-text" role="status" aria-live="polite" class="text-center text-xs font-bold text-slate-600 dark:text-slate-400 mt-6 min-h-[16px]">
               Ready. Select 'Register Passkey' to begin.
             </div>
           </div>
@@ -111,7 +121,7 @@
       </div>
 
       <!-- OAuth 2.0 Content -->
-      <div id="content-oauth" class="hidden space-y-8 animate-fade-in duration-300">
+      <div id="content-oauth" role="tabpanel" aria-labelledby="tab-oauth" class="hidden space-y-8 animate-fade-in duration-300">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           <!-- Interactive Controls (Left Column) -->
@@ -163,7 +173,7 @@
 
               <!-- Transfer bubble -->
               <div id="node-oauth-bubble" class="absolute top-1/2 w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center shadow z-10" style="left: 12%; transform: translate(-50%, -50%) scale(0.75); opacity: 0;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white"><key cx="4" cy="4" r="2"></key><path d="M21 2l-2 2m-7.61 7.61a5.5 5.05 0 1 1-7.778 7.778 5.5 5.05 0 0 1 7.778-7.778z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white"><circle cx="4" cy="4" r="2"></circle><path d="M21 2l-2 2m-7.61 7.61a5.5 5.05 0 1 1-7.778 7.778 5.5 5.05 0 0 1 7.778-7.778z"></path></svg>
               </div>
 
               <!-- Auth Server Node -->
@@ -174,7 +184,7 @@
             </div>
 
             <!-- Dynamic text status bubble -->
-            <div id="oauth-status-text" class="text-center text-xs font-bold text-slate-600 dark:text-slate-400 mt-6 min-h-[16px]">
+            <div id="oauth-status-text" role="status" aria-live="polite" class="text-center text-xs font-bold text-slate-600 dark:text-slate-400 mt-6 min-h-[16px]">
               Ready. Select 'Request Authorization Code' to begin.
             </div>
           </div>
@@ -199,7 +209,7 @@
           </button>
         </div>
 
-        <div id="console-stream" class="h-40 overflow-y-auto space-y-2 text-xs leading-relaxed text-slate-300 font-mono scrollbar-thin">
+        <div id="console-stream" role="log" aria-live="polite" class="h-40 overflow-y-auto space-y-2 text-xs leading-relaxed text-slate-300 font-mono scrollbar-thin">
           <p class="text-slate-400">[SYSTEM] Cryptographic sandbox initialized. WebAuthn and OIDC services are active.</p>
         </div>
       </div>
@@ -217,27 +227,50 @@
     const fidoContent = document.getElementById('content-fido2');
     const oauthContent = document.getElementById('content-oauth');
 
-    // Tab switcher logic
+    // Tab switcher logic. Keeps aria-selected/tabindex in sync with the
+    // visual state (WCAG 4.1.2), and supports arrow-key switching between the
+    // two tabs (WAI-ARIA Authoring Practices tab pattern).
     if (tabFido && tabOauth && fidoContent && oauthContent) {
-      tabFido.addEventListener('click', () => {
+      const selectFido = () => {
         tabFido.classList.add('border-b-2', 'border-blue-500', 'text-blue-600', 'dark:text-blue-400');
         tabFido.classList.remove('border-transparent', 'text-slate-600', 'dark:text-slate-400');
         tabOauth.classList.remove('border-b-2', 'border-blue-500', 'text-blue-600', 'dark:text-blue-400');
         tabOauth.classList.add('border-transparent', 'text-slate-600', 'dark:text-slate-400');
+        tabFido.setAttribute('aria-selected', 'true');
+        tabFido.setAttribute('tabindex', '0');
+        tabOauth.setAttribute('aria-selected', 'false');
+        tabOauth.setAttribute('tabindex', '-1');
         fidoContent.classList.remove('hidden');
         oauthContent.classList.add('hidden');
         addLog('SYSTEM', 'Switched context to WebAuthn / FIDO2 Passkey testing module.');
-      });
+      };
 
-      tabOauth.addEventListener('click', () => {
+      const selectOauth = () => {
         tabOauth.classList.add('border-b-2', 'border-blue-500', 'text-blue-600', 'dark:text-blue-400');
         tabOauth.classList.remove('border-transparent', 'text-slate-600', 'dark:text-slate-400');
         tabFido.classList.remove('border-b-2', 'border-blue-500', 'text-blue-600', 'dark:text-blue-400');
         tabFido.classList.add('border-transparent', 'text-slate-600', 'dark:text-slate-400');
+        tabOauth.setAttribute('aria-selected', 'true');
+        tabOauth.setAttribute('tabindex', '0');
+        tabFido.setAttribute('aria-selected', 'false');
+        tabFido.setAttribute('tabindex', '-1');
         oauthContent.classList.remove('hidden');
         fidoContent.classList.add('hidden');
         addLog('SYSTEM', 'Switched context to OAuth 2.0 Auth Code Grant simulation.');
-      });
+      };
+
+      tabFido.addEventListener('click', selectFido);
+      tabOauth.addEventListener('click', selectOauth);
+
+      const handleTabKeydown = (event) => {
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+        event.preventDefault();
+        const next = event.target === tabFido ? tabOauth : tabFido;
+        next.focus();
+        if (next === tabFido) selectFido(); else selectOauth();
+      };
+      tabFido.addEventListener('keydown', handleTabKeydown);
+      tabOauth.addEventListener('keydown', handleTabKeydown);
     }
 
     // Terminal log engine
@@ -275,7 +308,8 @@
 
     let registeredPublicKey = null;
 
-    if (fReg = fidoRegBtn) {
+    const fReg = fidoRegBtn;
+    if (fReg) {
       fReg.addEventListener('click', () => {
         fReg.disabled = true;
         fidoStatus.textContent = 'Generating cryptographic key pair on Device Secure Enclave...';
@@ -327,7 +361,8 @@
       });
     }
 
-    if (fAuth = fidoAuthBtn) {
+    const fAuth = fidoAuthBtn;
+    if (fAuth) {
       fAuth.addEventListener('click', () => {
         if (!registeredPublicKey) return;
         fAuth.disabled = true;
@@ -421,7 +456,8 @@
 
     let receivedAuthCode = null;
 
-    if (oCode = oAuthCodeBtn) {
+    const oCode = oAuthCodeBtn;
+    if (oCode) {
       oCode.addEventListener('click', () => {
         oCode.disabled = true;
         oAuthStatus.textContent = 'Redirecting user to authorize scope request...';
@@ -478,7 +514,8 @@
       });
     }
 
-    if (oTok = oAuthTokenBtn) {
+    const oTok = oAuthTokenBtn;
+    if (oTok) {
       oTok.addEventListener('click', () => {
         if (!receivedAuthCode) return;
         oTok.disabled = true;
@@ -546,7 +583,7 @@
                   setTimeout(() => {
                     oAuthBubble.style.transition = 'none';
                     oAuthBubble.style.left = '12%';
-                    oAuthBubble.innerHTML = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white"><key cx="4" cy="4" r="2"></key><path d="M21 2l-2 2m-7.61 7.61a5.5 5.05 0 1 1-7.778 7.778 5.5 5.05 0 0 1 7.778-7.778z"></path></svg>`;
+                    oAuthBubble.innerHTML = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white"><circle cx="4" cy="4" r="2"></circle><path d="M21 2l-2 2m-7.61 7.61a5.5 5.05 0 1 1-7.778 7.778 5.5 5.05 0 0 1 7.778-7.778z"></path></svg>`;
                   }, 500);
                 }, 1000);
 
@@ -558,7 +595,5 @@
     }
   };
 
-  // Run on load
   setupSecuritySimulators();
-  document.addEventListener('astro:after-swap', setupSecuritySimulators);
 </script>

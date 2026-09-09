@@ -25,18 +25,33 @@ export const futureResearch = [
   "Risk-based Access Control"
 ];
 
-export const publications = [
+export interface Publication {
+  id: string;
+  title: string;
+  type: string;
+  description: string;
+  publisher?: string;
+  year?: string;
+  url?: string;
+}
+
+export const publications: Publication[] = [
   {
     id: "cyber-book",
-    title: "Cybersecurity Handbook",
+    title: "Implementing Enterprise Cybersecurity with Open-Source Software and Standard Architecture",
     type: "Book",
-    description: "A comprehensive guide to enterprise cybersecurity, secure architecture, and modern threat mitigation."
+    description: "A River Publishers title, published in association with IIT Kanpur, covering open-source enterprise cybersecurity implementation and standard reference architecture. Edited by Anand Handa, Rohit Negi, and Sandeep K. Shukla.",
+    publisher: "River Publishers",
+    year: "2020",
+    url: "https://www.riverpublishers.com/book_details.php?book_id=950"
   },
   {
     id: "ieee-papers",
     title: "IEEE Publications",
     type: "Research Paper",
-    description: "Published research papers detailing advancements in IoT security, embedded systems, and communication protocols."
+    description: "Published research papers detailing advancements in IoT security, embedded systems, and communication protocols.",
+    publisher: "IEEE",
+    url: "https://ieeexplore.ieee.org/document/9514776"
   },
   {
     id: "whitepapers",

@@ -48,8 +48,7 @@ Beyond the single-page scroll there are real routes: `/blog`, `/blog/[slug]`,
 - `Footer`
 
 ## 4. Typography System
-- **Primary (Headings & UI):** `Geist` (clean, modern, engineering-focused).
-- **Secondary (Body):** `Inter` (highly readable for long-form text).
+- **Primary (Headings, UI & Body):** `Geist` (clean, modern, engineering-focused).
 - **Monospace (Code & Tech tags):** `JetBrains Mono`.
 
 **Self-hosted variable fonts.** `@font-face` declarations live in

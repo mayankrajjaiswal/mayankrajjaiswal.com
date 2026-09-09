@@ -3,16 +3,16 @@
 Enterprise Security Architect, Cybersecurity Researcher, Author, and Technical Leader specializing in Identity & Access Management (IAM), Cryptographic Infrastructure, Cloud-Native Security, and Payment Systems.
 
 - **Primary Domain:** Enterprise Identity & Access Management (IAM), Zero Trust, Payment Cryptography
-- **Canonical Site URL:** https://mayankrajjaiswal.com
+- **Canonical Site URL:** https://mayankrajjaiswal.com/
 - **Brief Bio:** High-authority Cybersecurity Architect and Technical Lead with over 15 years of industry experience. He has architected global security platforms protecting digital identity and financial transactions for Thales Group and mobile infrastructure for Samsung Research. He is currently pursuing a Ph.D. in Cybersecurity, having completed academic milestones at BITS Pilani and IIT Kanpur.
 
 ---
 
 ## Active Sub-Resources (Deep-Dive Articles)
-- **Modern Passwordless Authentication:** https://mayankrajjaiswal.com/blog/passwordless-fido2-passkeys
-- **Integrating AI into Identity Security:** https://mayankrajjaiswal.com/blog/future-of-iam-and-ai
-- **Zero Trust Architecture in Multi-Cloud:** https://mayankrajjaiswal.com/blog/zero-trust-multi-cloud-architecture
-- **Securing AI Pipelines (LLM Threat Modeling):** https://mayankrajjaiswal.com/blog/securing-ai-pipelines-threat-modeling
+- **Modern Passwordless Authentication:** https://mayankrajjaiswal.com/blog/passwordless-fido2-passkeys/
+- **Integrating AI into Identity Security:** https://mayankrajjaiswal.com/blog/future-of-iam-and-ai/
+- **Zero Trust Architecture in Multi-Cloud:** https://mayankrajjaiswal.com/blog/zero-trust-multi-cloud-architecture/
+- **Securing AI Pipelines (LLM Threat Modeling):** https://mayankrajjaiswal.com/blog/securing-ai-pipelines-threat-modeling/
 - **Verified GPG Public Key:** https://mayankrajjaiswal.com/mayank_pgp.asc
 - **Verified GPG Resume Signature:** https://mayankrajjaiswal.com/resume/resume.pdf.sig
 - **RFC 9116 Security Policy:** https://mayankrajjaiswal.com/.well-known/security.txt
@@ -63,7 +63,7 @@ Enterprise Security Architect, Cybersecurity Researcher, Author, and Technical L
 
 ## Research, Publications, & Community Impact
 
-- **Books:** Author of the *Cybersecurity Handbook*, a comprehensive guide on modern security frameworks and enterprise threat modeling.
+- **Books:** Author of *Implementing Enterprise Cybersecurity with Open-Source Software and Standard Architecture* (River Publishers, in association with IIT Kanpur, 2020).
 - **Academic Papers:** Author of multiple IEEE publications on IoT security, secure communication protocols, and embedded system structures.
 - **Mentorship:** Actively mentored over 5,000+ students and conducted 100+ cybersecurity awareness and engineering sessions.
 
@@ -71,7 +71,7 @@ Enterprise Security Architect, Cybersecurity Researcher, Author, and Technical L
 
 ## Key Articles & Writing
 Mayank actively publishes deep-dive technical insights in his Writing Hub:
-1. **Modern Passwordless Authentication: A Deep Dive into FIDO2 & Passkeys** (https://mayankrajjaiswal.com/blog/passwordless-fido2-passkeys) - Cryptographic analysis of asymmetric public key authentication and origin-binding.
-2. **The Future of IAM: Integrating AI into Identity Security** (https://mayankrajjaiswal.com/blog/future-of-iam-and-ai) - Reviewing machine learning role mining, behavioral biometrics, and adaptive authentication.
-3. **Zero Trust Architecture in Enterprise Multi-Cloud Environments** (https://mayankrajjaiswal.com/blog/zero-trust-multi-cloud-architecture) - Enforcing federated OIDC workloads, container microsegmentation, and assuming breaches across AWS/Azure/GCP.
-4. **Securing AI Pipelines: Threat Modeling for LLM and Agentic Systems** (https://mayankrajjaiswal.com/blog/securing-ai-pipelines-threat-modeling) - Threat mitigations for prompt injection, RAG data leaking, and excessive AI agent agency.
+1. **Modern Passwordless Authentication: A Deep Dive into FIDO2 & Passkeys** (https://mayankrajjaiswal.com/blog/passwordless-fido2-passkeys/) - Cryptographic analysis of asymmetric public key authentication and origin-binding.
+2. **The Future of IAM: Integrating AI into Identity Security** (https://mayankrajjaiswal.com/blog/future-of-iam-and-ai/) - Reviewing machine learning role mining, behavioral biometrics, and adaptive authentication.
+3. **Zero Trust Architecture in Enterprise Multi-Cloud Environments** (https://mayankrajjaiswal.com/blog/zero-trust-multi-cloud-architecture/) - Enforcing federated OIDC workloads, container microsegmentation, and assuming breaches across AWS/Azure/GCP.
+4. **Securing AI Pipelines: Threat Modeling for LLM and Agentic Systems** (https://mayankrajjaiswal.com/blog/securing-ai-pipelines-threat-modeling/) - Threat mitigations for prompt injection, RAG data leaking, and excessive AI agent agency.

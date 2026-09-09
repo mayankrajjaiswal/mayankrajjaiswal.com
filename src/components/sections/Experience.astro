@@ -140,9 +140,5 @@ import { experiences } from '../../data/experience';
     });
   };
 
-  // Run on load
   setupExperienceToggles();
-
-  // Support SPA transitions
-  document.addEventListener('astro:after-swap', setupExperienceToggles);
 </script>

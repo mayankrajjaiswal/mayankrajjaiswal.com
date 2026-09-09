@@ -1,0 +1,84 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+
+const categories = [
+  {
+    title: "Security & Identity",
+    items: [
+      { name: "PKCS#11 HSMs (Luna, nShield, PayShield)", note: "Hardware-backed key management" },
+      { name: "OpenSSL", note: "TLS/mTLS and certificate tooling" },
+      { name: "OWASP ZAP", note: "Dynamic application security testing" },
+      { name: "SonarQube & Fortify", note: "Static analysis and SCA" },
+    ]
+  },
+  {
+    title: "Cloud & DevSecOps",
+    items: [
+      { name: "AWS", note: "Cloud Practitioner, Developer Associate, and AI Practitioner certified" },
+      { name: "Docker & Kubernetes", note: "Containerized microservices, hardened deployments" },
+      { name: "GitLab CI/CD", note: "DevSecOps pipeline integration" },
+      { name: "Redis, Hazelcast, Kafka", note: "Distributed caching and streaming" },
+    ]
+  },
+  {
+    title: "AI Tooling",
+    items: [
+      { name: "GitHub Copilot", note: "AI-assisted engineering" },
+      { name: "Gemini", note: "IAM AI automation initiatives" },
+      { name: "Claude Code", note: "Agentic development workflows" },
+    ]
+  },
+  {
+    title: "This Site",
+    items: [
+      { name: "Astro 5", note: "Static-site generation, zero client JS by default" },
+      { name: "Tailwind CSS", note: "Utility-first styling" },
+      { name: "Playwright + axe-core", note: "Accessibility, SEO, and security regression testing" },
+    ]
+  }
+];
+---
+
+<Layout
+  title="Uses | Mayank Raj Jaiswal"
+  description="Tools, platforms, and technologies Mayank Raj Jaiswal uses day to day in security architecture, cloud engineering, and this website."
+>
+  <Header />
+  <main id="main-content" tabindex="-1" class="flex-grow pt-32 pb-24 bg-white dark:bg-slate-950 outline-none">
+    <div class="max-w-3xl mx-auto px-6">
+
+      <div class="mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-50 mb-4">
+          Uses
+        </h1>
+        <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+          Tools and platforms that show up most often in day-to-day work as a
+          security architect — and the stack behind this site itself.
+        </p>
+      </div>
+
+      <div class="space-y-12">
+        {categories.map(category => (
+          <section>
+            <h2 class="text-xl font-bold text-slate-900 dark:text-slate-50 mb-5">{category.title}</h2>
+            <ul class="space-y-4">
+              {category.items.map(item => (
+                <li class="flex items-start gap-3.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-1 text-blue-500 shrink-0" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <div>
+                    <p class="text-sm font-bold text-slate-900 dark:text-slate-50">{item.name}</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400 mt-0.5">{item.note}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+
+    </div>
+  </main>
+  <Footer />
+</Layout>

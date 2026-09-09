@@ -24,14 +24,23 @@ jobs:
   test:
     name: Test (a11y, SEO, CSP)
     runs-on: ubuntu-latest
+    # Jobs default to a 360-minute timeout. Combined with
+    # `concurrency.group: "pages"` and `cancel-in-progress: false`, one wedged
+    # job would block the Pages queue for six hours. The suite finishes in
+    # ~2 minutes, so 20 is generous headroom that still fails fast.
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
+      # Node 24, not 20: Node 20 went EOL 2026-04-30 and is REMOVED from the
+      # Actions runners on 2026-09-23, at which point every node20-pinned
+      # action below would stop working. Astro 5.18.2 declares engines
+      # `18.20.8 || ^20.3.0 || >=22.0.0`, so 24 is supported.
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
@@ -92,26 +101,38 @@ jobs:
       - name: Run Playwright suite
         run: npx playwright test --project=chromium
 
+      # v6, not v5: upload-artifact@v5 is STILL on the node20 runtime -- only
+      # v6 moved to node24, so the obvious one-major bump would not clear the
+      # 2026-09-23 removal. `overwrite` lets a re-run of a failed job replace
+      # the previous attempt's report instead of failing with a 409, which
+      # otherwise hides the diagnostics you re-ran to collect.
       - name: Upload report on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+          overwrite: true
 
   build:
     name: Build
     needs: test
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
+      # withastro/action@v6 (was v2). Beyond clearing the node20 runtime, v6
+      # pins actions/upload-pages-artifact@v5 with `include-hidden-files: true`
+      # -- which is what keeps /.well-known/security.txt in the deployed
+      # artifact. v2 relied on upload-pages-artifact@v3 happening not to strip
+      # dotfiles; v6 makes that explicit rather than incidental.
       - name: Install, build, and upload your site
-        uses: withastro/action@v2
+        uses: withastro/action@v6
         with:
-          node-version: 20
+          node-version: 24
           package-manager: npm
 
   deploy:
@@ -120,10 +141,11 @@ jobs:
     # Never publish from a pull request — validate only.
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
